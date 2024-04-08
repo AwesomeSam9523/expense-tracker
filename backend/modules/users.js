@@ -78,7 +78,7 @@ router.post('/add', async (req, res) => {
         success: true,
         message: 'User created',
         data: {
-            userId: userId,
+            id: userId,
             name: name,
             role: role,
             token: generatedToken,
@@ -102,14 +102,19 @@ router.get('/token', async (req, res) => {
     }
 
     // Get the token from the database
-    const data = await pool.query('SELECT "token" FROM "users" WHERE "name" = $1', [name]);
-    if (data.rows.length === 0) {
+    const data = await pool.query('SELECT "id", "role", "token", "enabled" FROM "users" WHERE "name" = $1', [name]);
+    if (data.rowCount === 0) {
         return res.status(404).json({ success: false, message: 'User not found' });
     }
 
     return res.status(200).json({
         success: true,
-        token: data.rows[0].token,
+        data: {
+            id: data.rows[0].id,
+            role: data.rows[0].role,
+            token: data.rows[0].token,
+            enabled: data.rows[0].enabled,
+        },
     });
 });
 

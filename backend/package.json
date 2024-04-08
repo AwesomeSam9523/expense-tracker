@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "The backend server of IEEE CS Expense Tracker",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
   "author": "AwesomeSam9523",
   "license": "ISC",
   "type": "module",
@@ -14,5 +17,8 @@
     "express": "^4.19.2",
     "pg": "^8.11.5",
     "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
   }
 }
