@@ -144,7 +144,7 @@ async function checkSufficientPermissions(req, res) {
     // If the user is a CC they cannot disable another CC or EC.
     // So we should check that they are disabling only a JC.
     const { id } = req.body;
-    const data = await pool.query('SELECT ("id", "name", "enabled") FROM "users" WHERE "id" = $1', [id]);
+    const data = await pool.query('SELECT "id", "role" FROM "users" WHERE "id" = $1', [id]);
     if (data.rowCount === 0) {
         res.status(404).json({ success: false, message: 'User not found' });
         return false;
