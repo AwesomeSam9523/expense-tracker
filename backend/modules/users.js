@@ -1,6 +1,10 @@
 /*
 This file has the following routes:
 
+/user/login
+    POST
+    Checks if the user's token is successful
+
 /user/add
     POST
     Requires: name, pfp, role
@@ -43,8 +47,15 @@ import {v4 as uuidv4} from "uuid";
 import { Router } from 'express';
 const router = Router();
 
+router.post('/login', async (req, res) => {
+    if (!req.user) {
+        return res.status(401).json({ success: false, message: 'No token provided' });
+    }
+
+    return res.status(200).json({ success: true, message: 'Login successful', data: req.user });
+});
+
 router.post('/add', async (req, res) => {
-    console.log(req.user);
     if (!req.user) {
         return res.status(401).json({ success: false, message: 'Unauthorized' });
     }
