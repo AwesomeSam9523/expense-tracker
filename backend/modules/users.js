@@ -44,7 +44,7 @@ This file has the following routes:
 
 import { v4 as uuidv4 } from 'uuid';
 import { Router } from 'express';
-import pool from '../utils/database';
+import pool from '../utils/database.js';
 
 const router = Router();
 

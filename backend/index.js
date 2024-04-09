@@ -2,8 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 
-import { getUser } from './utils/login';
-import userManager from './modules/users';
+import getUser from './utils/login.js';
+import userManager from './modules/users.js';
 
 const app = express();
 app.use(cors({
