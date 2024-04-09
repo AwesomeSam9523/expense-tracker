@@ -30,6 +30,32 @@ All the endpoints will also return a base JSON object with the following fields:
 All the returns specified in the below requests are now assumed to be in `data` field.
 
 ## Users
+
+### `Post` /user/login 🔒
+Verifies the token and returns back the user's data
+
+#### Permissions
+
+| Role | Permissions |
+|------|-------------|
+| EC   | ✅           |
+| CC   | ✅           |
+| JC   | ✅           |
+
+#### Request Body:
+None
+
+#### Response Body:
+
+| Field  | Type     | Description                     |
+|--------|----------|---------------------------------|
+| `id`   | String   | The ID of the user              |
+| `name` | String   | The name of the user            |
+| `role` | String   | The role of the user            |
+| `pfp`  | String   | The profile picture of the user |
+
+<br>
+
 ### `POST` /user/add 🔒
 Add a new user to the database.
 
