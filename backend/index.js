@@ -25,7 +25,7 @@ app.use(fileUpload({
   useTempFiles : true,
   tempFileDir : '/tmp/',
   safeFileNames: /\\/g,
-  debug: true,
+  debug: process.env.PRODUCTION !== 'true',
 }));
 app.use(async (req, res, next) => {
   if (!req.headers.authorization)

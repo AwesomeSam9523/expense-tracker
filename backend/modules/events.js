@@ -70,13 +70,44 @@ router.post('/edit', async (req, res) => {
   }
 });
 
+router.post('/close', async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({success: false, message: 'Unauthorized'});
+    }
+
+    if (req.user.role !== 'EC') {
+      return res.status(403).json({success: false, message: 'Insufficient Permissions'});
+    }
+
+    const { id, value } = req.body;
+
+    if (!id) {
+      return res.status(400).json({success: false, message: 'ID is required'});
+    }
+
+    if (value !== true || value !== false) {
+      return res.status(400).json({success: false, message: 'Value must be true/false'});
+    }
+
+    await pool.query('UPDATE events SET closed = $2 WHERE id = $1', [id, value]);
+    res.status(201).json({
+      success: true,
+      message: 'Event closed!',
+    });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({success: false, message: 'Internal Server Error'});
+  }
+});
+
 router.get('/list', async (req, res) => {
   try {
     if (!req.user) {
       return res.status(401).json({success: false, message: 'Unauthorized'});
     }
 
-    const data = await pool.query('SELECT id, name, description, date, budget, "createdAt", closed FROM events WHERE closed = false ORDER BY date ASC');
+    const data = await pool.query('SELECT id, name, description, date, budget, "createdAt", closed FROM events WHERE closed = false');
     res.status(200).json({
       success: true,
       data: data.rows,

@@ -16,6 +16,14 @@ In a development environment, you can use `nodemon` to automatically restart the
   2. [Get Token](#get-usertoken-)
   3. [Disable User](#post-userdisable-)
   4. [Enable User](#post-userenable-)
+- [Events](#events)
+  1. [List Events](#get-eventlist-)
+  2. [Add Event](#post-eventadd-)
+  3. [Edit Event](#post-eventedit-)
+  4. [Close Event](#post-eventclose-)
+- [Invoices](#invoices)
+  1. [Add Invoice](#post-invoicenew-)
+  2. [Get Invoice File](#get-invoicefileid-)
 
 The following endpoints are available:\
 All the endpoints use `Authorization: Bearer <token>` in headers as the authentication method.\
@@ -156,3 +164,196 @@ Enabled a token in the database.
 #### Response Body:
 
 None
+
+## Events
+
+### `GET` /event/list 🔒
+Returns a list of all the events in the database.
+
+#### Permissions
+
+| Role | Permissions |
+|------|-------------|
+| EC   | ✅           |
+| CC   | ✅           |
+| JC   | ✅           |
+
+#### Query Parameters:
+
+None
+
+#### Response Body:
+
+| Field        | Type    | Description                    |
+|--------------|---------|--------------------------------|
+| `id`         | String  | The ID of the event            |
+| `name`       | String  | The name of the event          |
+| `desription` | String  | The description of the event   |
+| `date`       | String  | The date of the event          |
+| `budget`     | Number  | The budget of the event        |
+| `createdAt`  | String  | The date the event was created |
+| `closed`     | Boolean | Whether the event is closed    |
+
+<br>
+
+### `POST` /event/add 🔒
+Add a new event to the database.
+
+#### Permissions
+
+| Role | Permissions |
+|------|-------------|
+| EC   | ✅           |
+| CC   | ❌           |
+| JC   | ❌           |
+
+#### Request Body:
+
+| Field         | Type   | Description                  |
+|---------------|--------|------------------------------|
+| `name`        | String | The name of the event        |
+| `description` | String | The description of the event |
+| `date`        | String | The date of the event        |
+| `budget`      | Number | The budget of the event      |
+
+#### Response Body:
+
+None
+<br>
+
+### `POST` /event/edit 🔒
+Edit an event in the database.
+
+#### Permissions
+
+| Role | Permissions |
+|------|-------------|
+| EC   | ✅           |
+| CC   | ❌           |
+| JC   | ❌           |
+
+#### Request Body:
+
+| Field         | Type   | Description                  |
+|---------------|--------|------------------------------|
+| `id`          | String | The ID of the event          |
+| `name`        | String | The name of the event        |
+| `description` | String | The description of the event |
+| `date`        | String | The date of the event        |
+| `budget`      | Number | The budget of the event      |
+
+#### Response Body:
+
+None
+
+
+### `POST` /event/close 🔒
+Closes an event in the database. After closing the event, no more invoices can be added to the event.
+
+#### Permissions
+
+| Role | Permissions |
+|------|-------------|
+| EC   | ✅           |
+| CC   | ❌           |
+| JC   | ❌           |
+
+#### Request Body:
+
+| Field | Type   | Description         |
+|-------|--------|---------------------|
+| `id`  | String | The ID of the event |
+
+#### Response Body:
+
+None
+
+## Invoices
+
+### `POST` /invoice/new 🔒
+Add a new invoice to the database.
+
+#### Permissions
+
+| Role | Permissions |
+|------|-------------|
+| EC   | ✅           |
+| CC   | ✅           |
+| JC   | ✅           |
+
+#### Request Body:
+
+`amount` and `eventId` should be included in query parameters.\
+A file object should be uploaded as `multipart/form-data`.
+
+Sample Code:
+
+HTML:
+
+```html
+<html lang="en">
+</head>
+<body>
+    <h1>File test upload</h1>
+    <br>
+    <input type="file" id="file" name="invoice">
+    <button id="upload">Upload</button>
+</body>
+</html>
+```
+Javascript:
+
+```javascript
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('upload');
+  const file = document.getElementById('file');
+  btn.addEventListener('click', () => {
+    const formData = new FormData();
+    formData.encType = 'multipart/form-data';
+    formData.append('file', file.files[0]);
+    fetch('http://localhost:3000/invoice/new?amount=<amount>&eventId=<eventId>', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'Authorization': 'Bearer <token>'
+      }
+    }).then(response => {
+      console.log(response);
+    }).catch(error => {
+      console.error(error);
+    });
+  });
+});
+```
+
+
+#### Response Body:
+
+None
+
+
+### `GET` /invoice/file/:id 🔒
+Returns the file of the invoice with the given ID.
+
+#### Permissions
+
+| Role | Permissions |
+|------|-------------|
+| EC   | ✅           |
+| CC   | ✅           |
+| JC   | ✅           |
+
+
+#### Request Parameters:
+
+| Field | Type   | Description         |
+|-------|--------|---------------------|
+| `id`  | String | The ID of the invoice |
+
+The `eventId` should be added in the query parameters.
+
+#### Response Body:
+
+The file of the invoice.
+
+<br>

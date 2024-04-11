@@ -45,7 +45,7 @@ router.get('/file/:id', async (req, res) => {
     }
 
     const {id} = req.params;
-    const {eventId} = req.query['eventId'];
+    const {eventId} = req.query;
 
     const data = await pool.query('SELECT * FROM invoices WHERE id = $1 AND "eventId" = $2', [id, eventId]);
 
