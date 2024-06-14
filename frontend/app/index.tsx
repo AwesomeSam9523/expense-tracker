@@ -1,19 +1,12 @@
 import "../global.css";
 import {Image, StyleSheet, View, Text} from "react-native";
+import icons from "../constants/icons"
 
 export default function Index() {
   return (
-    <View style={styles.mainView}>
-      {/* Write code here */}
+    <View className=" flex-1 justify-center items-center ">
+      <Text className="text-7xl font-bold " >IEEE CS</Text>    
+      <Image source={icons.one_zero} className="w-40 h-40" resizeMode="contain"/>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  mainView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: 50,
-  },
-});
