@@ -1,6 +1,6 @@
-  import express from 'express';
-  import cors from 'cors';
-  import bodyParser from 'body-parser';
+import express from 'express';
+import cors from 'cors';
+import bodyParser from 'body-parser';
 import fileUpload from 'express-fileupload';
 
 import getUser from './utils/login.js';
@@ -9,6 +9,12 @@ import eventManager from './modules/events.js';
 import invoiceManager from './modules/invoices.js';
 
 const app = express();
+
+app.use((req, res, next) => {
+  console.log('[LOG]', req.method, req.url);
+  next();
+});
+
 app.use(cors({
   origin: [
     'http://localhost:3000',
@@ -29,7 +35,8 @@ app.use(fileUpload({
 }));
 app.use(async (req, res, next) => {
   if (!req.headers.authorization)
-    return res.status(401);
+    return res.sendStatus(401);
+
   const token = req.headers.authorization.split(' ')[1];
   req.user = null;
 
@@ -42,6 +49,8 @@ app.use('/user', userManager);
 app.use('/event', eventManager);
 app.use('/invoice', invoiceManager);
 
-app.listen(3000, () => {
-  console.log('Server started on http://localhost:3000');
+app.get('/', (req, res) => {
+  res.send('Hello World!');
 });
+
+export default app;
