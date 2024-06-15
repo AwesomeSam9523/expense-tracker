@@ -26,7 +26,7 @@ router.post('/new', async (req, res) => {
     }
 
     const id = uuidv4();
-    await pool.query('INSERT INTO events (id, name, description, date, budget, "createdAt", "createdBy", closed) '
+    await pool.query('INSERT INTO "public"."events" (id, name, description, date, budget, "createdAt", "createdBy", closed) '
       + 'VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [id, name, description, date, budget, new Date(), req.user.id, false])
 
     res.status(201).json({
@@ -59,7 +59,7 @@ router.post('/edit', async (req, res) => {
     }
 
     // update the table
-    await pool.query('UPDATE events SET name = $1, description = $2, date = $3, budget = $4 WHERE id = $5', [name, description, date, budget, id]);
+    await pool.query('UPDATE "public"."events" SET name = $1, description = $2, date = $3, budget = $4 WHERE id = $5', [name, description, date, budget, id]);
     res.status(201).json({
       success: true,
       message: 'Event updated!',
@@ -90,7 +90,7 @@ router.post('/close', async (req, res) => {
       return res.status(400).json({success: false, message: 'Value must be true/false'});
     }
 
-    await pool.query('UPDATE events SET closed = $2 WHERE id = $1', [id, value]);
+    await pool.query('UPDATE "public"."events" SET closed = $2 WHERE id = $1', [id, value]);
     res.status(201).json({
       success: true,
       message: 'Event closed!',
@@ -107,7 +107,7 @@ router.get('/list', async (req, res) => {
       return res.status(401).json({success: false, message: 'Unauthorized'});
     }
 
-    const data = await pool.query('SELECT id, name, description, date, budget, "createdAt", closed FROM events WHERE closed = false');
+    const data = await pool.query('SELECT id, name, description, date, budget, "createdAt", closed FROM "public"."events" WHERE closed = false');
     res.status(200).json({
       success: true,
       data: data.rows,
