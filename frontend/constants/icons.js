@@ -8,7 +8,8 @@ import invoice from "../assets/icons/invoice.png"
 import tray_invoice from "../assets/icons/tray-invoice.png"
 import leftArrow from "../assets/icons/left-arrow.png"
 import logOut from "../assets/icons/log-out.png"
-import eye from "../assets/icons/login-eye.png"
+import eye from "../assets/icons/eye.png"
+import eyeHide from "../assets/icons/eye-hide.png"
 import one_zero from "../assets/icons/login-logo.png"
 import password from "../assets/icons/login-password.png"
 import user from "../assets/icons/login-user-icon.png"
@@ -19,6 +20,9 @@ import profile from "../assets/icons/profile.png"
 import rightArrow from "../assets/icons/right-arrow.png"
 import search from "../assets/icons/search.png"
 import upload from "../assets/icons/upload.png"
+import checked from "../assets/icons/checked.png"
+import unchecked from "../assets/icons/unchecked.png"
+import buttonIcon from "../assets/icons/button-icon.png"
 
 
 export default {
@@ -32,7 +36,8 @@ export default {
   tray_invoice,
   leftArrow, 
   logOut, 
-  eye, 
+  eye,
+  eyeHide, 
   one_zero, 
   password, 
   user, 
@@ -42,5 +47,8 @@ export default {
   profile,
   rightArrow,
   search,
-  upload
+  upload,
+  checked,
+  unchecked,
+  buttonIcon
 }
