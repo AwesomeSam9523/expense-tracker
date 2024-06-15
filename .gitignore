@@ -14,6 +14,9 @@ web-build/
 .DS_Store
 .idea
 .env
+.env.local
+
+# Backend
 backend/invoices
 /backend/node_modules
 .vercel
