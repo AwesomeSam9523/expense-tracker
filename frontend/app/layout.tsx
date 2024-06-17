@@ -4,10 +4,10 @@ import 'react-native-reanimated';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Image, View, StyleSheet, ImageSourcePropType } from 'react-native';
-import HomeScreen from './index.tsx';
-import UserManagementScreen from './user';
-import PendingInvoicesScreen from './pendinginvoice';
-import NotificationsScreen from './notifs';
+import HomeScreen from './home.tsx';
+import UserManagementScreen from './user.tsx';
+import PendingInvoicesScreen from './pendinginvoice.tsx';
+import NotificationsScreen from './notifs.tsx';
 
 const Tab = createBottomTabNavigator();
 
@@ -51,7 +51,7 @@ export default function RootLayout() {
           },
         })}
       >
-        <Tab.Screen name="index" component={HomeScreen} />
+        <Tab.Screen name="home" component={HomeScreen} />
         <Tab.Screen name="user" component={UserManagementScreen} />
         <Tab.Screen name="pendinginvoice" component={PendingInvoicesScreen} />
         <Tab.Screen name="notifs" component={NotificationsScreen} />
