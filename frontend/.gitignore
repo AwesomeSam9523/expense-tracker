@@ -1,14 +1,13 @@
 frontend/node_modules/
 .expo/
 dist/
-npm-debug.*frontend/expo-env.d.ts
-*.jksfrontend/expo-env.d.ts
 *.p8
 *.p12
 *.key
 *.mobileprovision
 *.orig.*
 web-build/
+frontend/expo-env.d.ts
 
 # macOS
 .DS_Store
