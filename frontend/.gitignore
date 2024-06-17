@@ -2,7 +2,7 @@ frontend/node_modules/
 .expo/
 dist/
 npm-debug.*
-*.jks
+*.jksfrontend/expo-env.d.ts
 *.p8
 *.p12
 *.key
