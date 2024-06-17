@@ -25,7 +25,7 @@ router.post('/new', async (req, res) => {
     await file.mv(`invoices/${name}`);
 
     const id = uuidv4();
-    await pool.query('INSERT INTO invoices (id, "fileUrl", amount, "createdAt", "createdBy", accepted, "acceptedBy", "acceptedAt", "eventId") ' +
+    await pool.query('INSERT INTO "public"."invoices" (id, "fileUrl", amount, "createdAt", "createdBy", accepted, "acceptedBy", "acceptedAt", "eventId") ' +
       'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)', [id, name, amount, new Date(), req.user.id, false, null, null, eventId]);
 
     res.status(201).json({
@@ -47,7 +47,7 @@ router.get('/file/:id', async (req, res) => {
     const {id} = req.params;
     const {eventId} = req.query;
 
-    const data = await pool.query('SELECT * FROM invoices WHERE id = $1 AND "eventId" = $2', [id, eventId]);
+    const data = await pool.query('SELECT * FROM "public"."invoices" WHERE id = $1 AND "eventId" = $2', [id, eventId]);
 
     if (data.rowCount === 0) {
       return res.status(404).json({

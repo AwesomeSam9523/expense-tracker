@@ -7,7 +7,7 @@ async function getUser(token) {
     return tokenMap[token];
   }
 
-  const data = await pool.query('SELECT "id", "name", "pfp", "role", "enabled" FROM "users" WHERE "token" = $1', [token]);
+  const data = await pool.query('SELECT "id", "name", "pfp", "role", "enabled" FROM "public"."users" WHERE "token" = $1', [token]);
   if (data.rowCount === 0) {
     return null;
   }

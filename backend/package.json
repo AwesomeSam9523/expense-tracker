@@ -2,13 +2,14 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "The backend server of IEEE CS Expense Tracker",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
+    "start": "node app.js",
+    "dev": "node app.js",
     "lint": "eslint \"./**/*.js\" --quiet",
     "lintFull": "eslint \"./**/*.js\"",
-    "lintFix": "eslint --fix \"./**/*.js\""
+    "lintFix": "eslint --fix \"./**/*.js\"",
+    "build": "echo 'No build required'"
   },
   "author": "AwesomeSam9523",
   "license": "ISC",

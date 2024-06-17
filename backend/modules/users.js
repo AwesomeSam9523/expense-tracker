@@ -84,11 +84,11 @@ router.post('/add', async (req, res) => {
     }
 
     // get latest created user's userId
-    const data = await pool.query('SELECT "id" FROM "users" ORDER BY "createdAt" DESC LIMIT 1');
+    const data = await pool.query('SELECT "id" FROM "public"."users" ORDER BY "createdAt" DESC LIMIT 1');
     const userId = (data.rows.length === 0 ? 1000 : parseInt(data.rows[0].id, 10)) + 1;
 
     const generatedToken = uuidv4();
-    await pool.query('INSERT INTO "users" ("id", "name", "pfp", "enabled", "role", "createdAt", "createdBy", "lastActive", "token")'
+    await pool.query('INSERT INTO "public"."users" ("id", "name", "pfp", "enabled", "role", "createdAt", "createdBy", "lastActive", "token")'
       + 'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)', [userId, name, pfp, true, role, new Date(), req.user.id, null, generatedToken]);
 
     res.status(201).json({
@@ -123,7 +123,7 @@ router.get('/token', async (req, res) => {
     }
 
     // Get the token from the database
-    const data = await pool.query('SELECT "id", "role", "token", "enabled" FROM "users" WHERE "name" = $1', [name]);
+    const data = await pool.query('SELECT "id", "role", "token", "enabled" FROM "public"."users" WHERE "name" = $1', [name]);
     if (data.rowCount === 0) {
       return res.status(404).json({success: false, message: 'User not found'});
     }
@@ -159,7 +159,7 @@ async function checkSufficientPermissions(req, res) {
     // If the user is a CC they cannot disable another CC or EC.
     // So we should check that they are disabling only a JC.
     const {id} = req.body;
-    const data = await pool.query('SELECT "id", "role" FROM "users" WHERE "id" = $1', [id]);
+    const data = await pool.query('SELECT "id", "role" FROM "public"."users" WHERE "id" = $1', [id]);
     if (data.rowCount === 0) {
       res.status(404).json({success: false, message: 'User not found'});
       return false;
@@ -185,7 +185,7 @@ router.post('/disable', async (req, res) => {
       return;
     }
     const {id} = req.body;
-    await pool.query('UPDATE "users" SET "enabled" = false WHERE "id" = $1', [id]);
+    await pool.query('UPDATE "public"."users" SET "enabled" = false WHERE "id" = $1', [id]);
 
     res.status(201).json({success: true, message: 'User disabled'});
   } catch (e) {
@@ -201,7 +201,7 @@ router.post('/enable', async (req, res) => {
       return;
     }
     const {id} = req.body;
-    await pool.query('UPDATE "users" SET "enabled" = true WHERE "id" = $1', [id]);
+    await pool.query('UPDATE "public"."users" SET "enabled" = true WHERE "id" = $1', [id]);
 
     res.status(201).json({success: true, message: 'User enabled'});
   } catch (e) {
