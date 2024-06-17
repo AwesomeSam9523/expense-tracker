@@ -1,6 +1,7 @@
 import "../global.css";
 import {Image, StyleSheet, View, Text} from "react-native";
 import icons from "../constants/icons"
+import React from "react";
 
 export default function Index() {
   return (
