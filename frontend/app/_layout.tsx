@@ -4,7 +4,7 @@ import 'react-native-reanimated';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Image, View, StyleSheet, ImageSourcePropType } from 'react-native';
-import HomeScreen from './index';
+import HomeScreen from './index.tsx';
 import UserManagementScreen from './user';
 import PendingInvoicesScreen from './pendinginvoice';
 import NotificationsScreen from './notifs';
