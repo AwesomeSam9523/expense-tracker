@@ -1,12 +1,6 @@
 import {View, ImageBackground, Image, Text} from "react-native";
 
-type CardProps = {
-  name: string;
-  image: string;
-  budget: number;
-};
-
-export function EventCard({name, image, budget}: CardProps) {
+export function EventCard({name, image, budget}) {
   console.log('Event Card', name, image, budget);
   return (
     <View className="flex m-4 w-full h-40">
