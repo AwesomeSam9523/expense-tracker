@@ -15,16 +15,16 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'http://localhost:8080',
-    null,
-    'null'
-  ],
-  optionsSuccessStatus: 200,
-  credentials: true,
-}));
+// app.use(cors({
+//   origin: [
+//     'http://localhost:3000',
+//     'http://localhost:8080',
+//     null,
+//     'null'
+//   ],
+//   optionsSuccessStatus: 200,
+//   credentials: true,
+// }));
 app.use(bodyParser.json());
 app.use(fileUpload({
   limits: { fileSize: 50 * 1024 * 1024 },
@@ -52,5 +52,11 @@ app.use('/invoice', invoiceManager);
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
+
+if (!process.env.VERCEL) {
+  app.listen(3000, () => {
+    console.log('Server started on http://localhost:3000');
+  });
+}
 
 export default app;
