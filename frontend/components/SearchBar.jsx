@@ -19,13 +19,13 @@ const SearchBar = ({setSearchPhrase}) => {
   const [currentPhrase, setCurrentPhrase] = useState('');
 
   return (
-    <View className="flex flex-row w-[82%]">
+    <View className="flex flex-row w-[85%]">
       <ScrollView className="w-full">
-        <View className="flex flex-row bg-darkgray p-2 rounded-3xl items-center">
+        <View className="flex flex-row bg-darkgray p-3 rounded-3xl items-center">
           <Image source={icons.search} className="w-8 h-8" resizeMode="contain"/>
 
           <TextInput
-            className="w-full pl-2 text-white"
+            className="w-full pl-2 font-pregular text-xl text-white"
             placeholder="Search any event"
             placeholderTextColor="#9A9393"
             value={currentPhrase}
