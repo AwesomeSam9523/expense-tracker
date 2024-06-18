@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-export default function PendingInvoicesScreen() {
+export default function PendingInvoices() {
   return (
     <View style={styles.container}>
       <Text>Pending Invoices Screen</Text>

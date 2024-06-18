@@ -16,8 +16,8 @@ In a development environment, you can use `nodemon` to automatically restart the
   2. [Get Token](#get-usertoken-)
   3. [Disable User](#post-userdisable-)
   4. [Enable User](#post-userenable-)
-- [Events](#events)
-  1. [List Events](#get-eventlist-)
+- [Index](#events)
+  1. [List Index](#get-eventlist-)
   2. [Add Event](#post-eventadd-)
   3. [Edit Event](#post-eventedit-)
   4. [Close Event](#post-eventclose-)
@@ -165,7 +165,7 @@ Enabled a token in the database.
 
 None
 
-## Events
+## Index
 
 ### `GET` /event/list 🔒
 Returns a list of all the events in the database.
