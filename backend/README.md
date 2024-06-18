@@ -16,7 +16,7 @@ In a development environment, you can use `nodemon` to automatically restart the
   2. [Get Token](#get-usertoken-)
   3. [Disable User](#post-userdisable-)
   4. [Enable User](#post-userenable-)
-- [Index](#events)
+- [Events](#events)
   1. [List Index](#get-eventlist-)
   2. [Add Event](#post-eventadd-)
   3. [Edit Event](#post-eventedit-)
@@ -165,7 +165,7 @@ Enabled a token in the database.
 
 None
 
-## Index
+## Events
 
 ### `GET` /event/list 🔒
 Returns a list of all the events in the database.
@@ -191,6 +191,7 @@ None
 | `desription` | String  | The description of the event   |
 | `date`       | String  | The date of the event          |
 | `budget`     | Number  | The budget of the event        |
+| `image`      | String  | The image of the event         |
 | `createdAt`  | String  | The date the event was created |
 | `closed`     | Boolean | Whether the event is closed    |
 
@@ -215,6 +216,7 @@ Add a new event to the database.
 | `description` | String | The description of the event |
 | `date`        | String | The date of the event        |
 | `budget`      | Number | The budget of the event      |
+| `image`       | String | The image of the event       |
 
 #### Response Body:
 
