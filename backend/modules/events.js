@@ -15,9 +15,9 @@ router.post('/new', async (req, res) => {
       return res.status(403).json({success: false, message: 'Insufficient Permissions'});
     }
 
-    const {name, description, date, budget} = req.body;
-    if (!name || !description || !date || !budget) {
-      return res.status(400).json({success: false, message: 'Name, description, date and budget are required'});
+    const {name, description, date, budget, image} = req.body;
+    if (!name || !description || !date || !budget || !image) {
+      return res.status(400).json({success: false, message: 'Name, description, date, image and budget are required'});
     }
 
     // Check that budget it more than 0
@@ -26,8 +26,8 @@ router.post('/new', async (req, res) => {
     }
 
     const id = uuidv4();
-    await pool.query('INSERT INTO "public"."events" (id, name, description, date, budget, "createdAt", "createdBy", closed) '
-      + 'VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [id, name, description, date, budget, new Date(), req.user.id, false])
+    await pool.query('INSERT INTO "public"."events" (id, name, description, date, budget, image, "createdAt", "createdBy", closed) '
+      + 'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)', [id, name, description, date, budget, image, new Date(), req.user.id, false])
 
     res.status(201).json({
       success: true,
@@ -107,7 +107,7 @@ router.get('/list', async (req, res) => {
       return res.status(401).json({success: false, message: 'Unauthorized'});
     }
 
-    const data = await pool.query('SELECT id, name, description, date, budget, "createdAt", closed FROM "public"."events" WHERE closed = false');
+    const data = await pool.query('SELECT id, name, description, date, budget, image, "createdAt", closed FROM "public"."events" WHERE closed = false');
     res.status(200).json({
       success: true,
       data: data.rows,
