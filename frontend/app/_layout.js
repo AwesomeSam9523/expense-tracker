@@ -1,21 +1,10 @@
 import "../global.css"
-import {router, SplashScreen, Stack} from 'expo-router';
+import {SplashScreen, Stack} from 'expo-router';
 import {useFonts} from 'expo-font'
 import React, {useEffect} from 'react';
-import {Image, StatusBar} from 'react-native';
+import {StatusBar} from 'react-native';
 
 SplashScreen.preventAutoHideAsync();
-
-const TabBarIcon = (props) => (
-  <Image
-    source={props.icon}
-    style={{
-      width: 24,
-      height: 24,
-      tintColor: props.focused ? '#f5b301' : '#ffffff',
-    }}
-  />
-);
 
 const RootLayout = () => {
 
@@ -36,7 +25,6 @@ const RootLayout = () => {
 
   if (!fontsLoaded && !error) return null
 
-  console.log('RootLayout')
   return (
     <>
       <Stack>
