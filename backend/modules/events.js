@@ -107,7 +107,9 @@ router.get('/list', async (req, res) => {
       return res.status(401).json({success: false, message: 'Unauthorized'});
     }
 
-    const data = await pool.query('SELECT id, name, description, date, budget, image, "createdAt", closed FROM "public"."events" WHERE closed = false');
+    const search = req.query.search || '';
+
+    const data = await pool.query('SELECT id, name, description, date, budget, image, "createdAt", closed FROM "public"."events" WHERE closed = false AND name ILIKE $1', [`%${search}%`]);
     res.status(200).json({
       success: true,
       data: data.rows,

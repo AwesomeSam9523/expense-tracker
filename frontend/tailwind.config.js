@@ -8,7 +8,9 @@ module.exports = {
       colors :{
         primary : "#151515",
         secondary : "#F9A31A",
-        gray : "#8A8A8A"
+        gray : "#8A8A8A",
+        darkgray: "#262626",
+        lightgray: "#9A9393"
       },
       fontFamily : {
         bextrabold : ["Barlow-ExtraBold", "sans-sarif"],
