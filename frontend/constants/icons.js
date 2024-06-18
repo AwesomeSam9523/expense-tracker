@@ -10,7 +10,7 @@ import leftArrow from "../assets/icons/left-arrow.png"
 import logOut from "../assets/icons/log-out.png"
 import eye from "../assets/icons/eye.png"
 import eyeHide from "../assets/icons/eye-hide.png"
-import one_zero from "../assets/icons/login-logo.png"
+import oneZero from "../assets/icons/login-logo.png"
 import password from "../assets/icons/login-password.png"
 import user from "../assets/icons/login-user-icon.png"
 import notification from "../assets/icons/notification.png"
@@ -23,25 +23,26 @@ import upload from "../assets/icons/upload.png"
 import checked from "../assets/icons/checked.png"
 import unchecked from "../assets/icons/unchecked.png"
 import buttonIcon from "../assets/icons/button-icon.png"
+import userIcon from "../assets/icons/user.png"
 
 
 export default {
-  budget, 
+  budget,
   cs,
-  edit, 
-  event, 
-  filter, 
-  home, 
-  invoice, 
+  edit,
+  event,
+  filter,
+  home,
+  invoice,
   tray_invoice,
-  leftArrow, 
-  logOut, 
+  leftArrow,
+  logOut,
   eye,
-  eyeHide, 
-  one_zero, 
-  password, 
-  user, 
-  notification, 
+  eyeHide,
+  oneZero,
+  password,
+  user,
+  notification,
   plus,
   profile_password,
   profile,
@@ -50,5 +51,6 @@ export default {
   upload,
   checked,
   unchecked,
-  buttonIcon
+  buttonIcon,
+  userIcon
 }

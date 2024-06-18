@@ -1,15 +1,23 @@
-import {View, ImageBackground, Image, Text} from "react-native";
+import {View, Image, Text, TouchableOpacity} from "react-native";
+import icons from "../constants/icons";
+
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 
 export function EventCard({name, image, budget}) {
-  console.log('Event Card', name, image, budget);
   return (
-    <View className="flex m-4 w-full h-40">
-      <Image source={{uri: image}} height={100} className="h-40" resizeMode="cover" />
-      <View className="absolute top-0">
-        <Text className="text-xl font-bold color-white bg-[#000000c0]">{name}</Text>
-        <Text className="text-lg color-white">Budget: {budget}</Text>
+    <View className="flex flex-col w-full h-40">
+      <Image source={{uri: image}} className="w-full h-full rounded-3xl" resizeMode="cover" />
+      <View className="absolute top-0 bg-[#00000090] w-full h-full pt-12 pl-8 rounded-3xl">
+        <Text className="text-4xl font-bold color-white">{name}</Text>
+        <Text className="text-xl font-bold color-white pt-1">Rs {numberWithCommas(budget)}/-</Text>
       </View>
-      {/*</Image>*/}
+      <View className="absolute bg-[#262626] rounded-full bottom-2 right-2 p-2 z-10">
+        <TouchableOpacity>
+          <Image source={icons.rightArrow} className="w-8 h-8" resizeMode="contain"/>
+        </TouchableOpacity>
+      </View>
     </View>
   )
 }

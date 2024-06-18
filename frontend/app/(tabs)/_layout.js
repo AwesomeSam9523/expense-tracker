@@ -1,10 +1,8 @@
 import {Image, StatusBar} from "react-native";
 import React from "react";
-import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import icons from "../../constants/icons";
 import { Tabs } from 'expo-router';
 
-const Tab = createBottomTabNavigator();
 const TabBarIcon = (props) => (
   <Image
     source={props.icon}
@@ -28,19 +26,17 @@ export default function TabLayout() {
     <>
       <Tabs
         screenOptions={({route}) => ({
-          tabBarIcon: ({ focused, color, size }) => {
+          tabBarIcon: ({ focused }) => {
             return <TabBarIcon icon={routeIcons[route.name]} focused={focused}/>;
           },
           tabBarActiveTintColor: '#f5b301',
           tabBarInactiveTintColor: '#ffffff',
           tabBarStyle: {
-            backgroundColor: '#000000',
+            backgroundColor: '#262626',
             paddingBottom: 5,
             height: 55,
           },
-          tabBarLabelStyle: {
-            fontSize: 12,
-          },
+          tabBarShowLabel: false,
           headerShown: false
         })}
       >
