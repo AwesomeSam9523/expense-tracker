@@ -8,7 +8,7 @@ function numberWithCommas(x) {
 
 export function EventCard({name, image, budget}) {
   return (
-    <View className="flex flex-col w-full h-40">
+    <View className="flex flex-col w-full h-40 mb-4">
       <Image source={{
         uri: image,
         method: 'GET',
