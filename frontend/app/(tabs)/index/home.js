@@ -1,5 +1,5 @@
 import "@/global.css";
-import {Image, View, Text, TouchableOpacity, ScrollView} from "react-native";
+import {Image, View,TouchableOpacity, ScrollView} from "react-native";
 import icons from "../../../constants/icons"
 import React, {useEffect, useState} from "react";
 import {SafeAreaView} from "react-native-safe-area-context";
@@ -7,6 +7,7 @@ import {service} from "../../../utils/service";
 import {EventCard} from "../../../components/EventCard";
 import SearchBar from "../../../components/SearchBar";
 import {router} from "expo-router";
+import AddButton from "../../../components/AddButton";
 
 function Index() {
   const [events, setEvents] = useState([]);
@@ -44,16 +45,7 @@ function Index() {
           </View>
         </ScrollView>
 
-        <TouchableOpacity onPress={() => {
-          router.push('/create-event')
-        }}>
-          <View className="flex flex-row bg-darkgray p-2 items-center gap-2 rounded-full my-5">
-            <View className="bg-secondary p-2 rounded-full">
-              <Image source={icons.plus} className="w-5 h-5 rounded-full" resizeMode="contain"/>
-            </View>
-            <Text className="text-white text-md font-pmedium px-1">Add new event</Text>
-          </View>
-        </TouchableOpacity>
+        <AddButton text={"Add new event"} route={"create-event"}/>
 
       </View>
 

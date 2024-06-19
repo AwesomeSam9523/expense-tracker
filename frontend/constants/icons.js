@@ -52,5 +52,5 @@ export default {
   checked,
   unchecked,
   buttonIcon,
-  userIcon
+  userIcon,
 }
