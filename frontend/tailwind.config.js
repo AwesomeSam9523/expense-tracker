@@ -10,7 +10,8 @@ module.exports = {
         secondary : "#F9A31A",
         gray : "#8A8A8A",
         darkgray: "#262626",
-        lightgray: "#9A9393"
+        lightgray: "#9A9393",
+        textgray: "#A6A6A6"
       },
       fontFamily : {
         bextrabold : ["Barlow-ExtraBold", "sans-sarif"],

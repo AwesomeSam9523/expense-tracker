@@ -1,21 +1,20 @@
-import { TouchableOpacity, Text, Image, View } from "react-native";
-import icons from "../constants/icons";
+import { TouchableOpacity, Text,  View } from "react-native";
+
 
 const SubmitButton = ({
-  handlePress,
-  isLoading
-}) => {
-  return (
-    <View className={`bg-transparent border-2 border-secondary rounded-full py-5 px-8 h-16 justify-center items-center ${isLoading ? "opacity-50" : "opacity-100"} `}>
-      <TouchableOpacity
-        onPress={handlePress}
-        disabled={isLoading}
-        
-      >
-        <Image className="w-20" resizeMode="contain" source={icons.buttonIcon} />
-      </TouchableOpacity>
-    </View>
-  );
-};
+    handlePress,
+    isLoading
+  }) => {
+    return (
+      <View className={`bg-transparent border-2 border-secondary rounded-full px-8 h-16 w-36  justify-center items-center ${isLoading ? "opacity-50" : "opacity-100"} `}>
+        <TouchableOpacity
+          onPress={handlePress}
+          disabled={isLoading}       
+        >
+          <Text className="text-xl font-pmedium  text-secondary">Submit</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
-export default SubmitButton;
+export default SubmitButton
