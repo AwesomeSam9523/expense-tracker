@@ -1,7 +1,10 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Router } from 'express';
 import pool from '../utils/database.js';
+import fs from "fs";
+import dotenv from "dotenv";
 
+dotenv.config();
 const router = Router();
 
 router.post('/new', async (req, res) => {
@@ -15,9 +18,9 @@ router.post('/new', async (req, res) => {
       return res.status(403).json({success: false, message: 'Insufficient Permissions'});
     }
 
-    const {name, description, date, budget, image} = req.body;
-    if (!name || !description || !date || !budget || !image) {
-      return res.status(400).json({success: false, message: 'Name, description, date, image and budget are required'});
+    const {name, description, budget, image, mimeType} = req.body;
+    if (!name || !description || !budget || !image || !mimeType) {
+      return res.status(400).json({success: false, message: 'Name, description, image, mimeType and budget are required'});
     }
 
     // Check that budget it more than 0
@@ -26,8 +29,13 @@ router.post('/new', async (req, res) => {
     }
 
     const id = uuidv4();
-    await pool.query('INSERT INTO "public"."events" (id, name, description, date, budget, image, "createdAt", "createdBy", closed) '
-      + 'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)', [id, name, description, date, budget, image, new Date(), req.user.id, false])
+    const fileExtension = mimeType.split('/')[1];
+    await fs.promises.writeFile(`./public/images/${id}.${fileExtension}`, image, 'base64');
+
+    const imageUrl = `${process.env.API_URL}/images/${id}.${fileExtension}`;
+
+    await pool.query('INSERT INTO "public"."events" (id, name, description, budget, image, "createdAt", "createdBy", closed) '
+      + 'VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [id, name, description, budget, imageUrl, new Date(), req.user.id, false])
 
     res.status(201).json({
       success: true,

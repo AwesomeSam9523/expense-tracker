@@ -6,7 +6,8 @@ import {SafeAreaView} from "react-native-safe-area-context";
 import {service} from "../../../utils/service";
 import {EventCard} from "../../../components/EventCard";
 import SearchBar from "../../../components/SearchBar";
-import { Redirect,router } from "expo-router";
+import {router} from "expo-router";
+
 function Index() {
   const [events, setEvents] = useState([]);
   const [searchPhrase, setSearchPhrase] = useState('');
@@ -27,23 +28,25 @@ function Index() {
         </View>
 
         <View className="flex flex-row w-full justify-between items-center py-8">
-          <SearchBar setSearchPhrase={setSearchPhrase} />
-          
+          <SearchBar setSearchPhrase={setSearchPhrase}/>
+
           <TouchableOpacity>
             <Image source={icons.filter} className="w-8 h-8" resizeMode="contain"/>
           </TouchableOpacity>
-          
+
         </View>
 
         <ScrollView className="flex w-full flex-grow max-h-[70%]">
           <View className="flex flex-col w-full gap-6">
             {events.map((event) => (
-              <EventCard key={event.id} name={event.name} image={event.image} budget={event.budget} />
+              <EventCard key={event.id} name={event.name} image={event.image} budget={event.budget}/>
             ))}
           </View>
         </ScrollView>
 
-        <TouchableOpacity onPress={()=>{router.push('/create-event')}}>
+        <TouchableOpacity onPress={() => {
+          router.push('/create-event')
+        }}>
           <View className="flex flex-row bg-darkgray p-2 items-center gap-2 rounded-full my-5">
             <View className="bg-secondary p-2 rounded-full">
               <Image source={icons.plus} className="w-5 h-5 rounded-full" resizeMode="contain"/>

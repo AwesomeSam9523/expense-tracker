@@ -1,12 +1,11 @@
 import express from 'express';
-import cors from 'cors';
 import bodyParser from 'body-parser';
-import fileUpload from 'express-fileupload';
 
 import getUser from './utils/login.js';
 import userManager from './modules/users.js';
 import eventManager from './modules/events.js';
 import invoiceManager from './modules/invoices.js';
+import path from "path";
 
 const app = express();
 
@@ -25,14 +24,8 @@ app.use((req, res, next) => {
 //   optionsSuccessStatus: 200,
 //   credentials: true,
 // }));
-app.use(bodyParser.json());
-app.use(fileUpload({
-  limits: { fileSize: 50 * 1024 * 1024 },
-  useTempFiles : true,
-  tempFileDir : '/tmp/',
-  safeFileNames: /\\/g,
-  debug: process.env.PRODUCTION !== 'true',
-}));
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(async (req, res, next) => {
   if (!req.headers.authorization)
     return res.sendStatus(401);
@@ -51,6 +44,12 @@ app.use('/invoice', invoiceManager);
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
+});
+
+app.get('/images/:id', (req, res) => {
+  const __dirname = path.resolve();
+  const filePath = path.join(__dirname, `./public/images/${req.params.id}`);
+  res.sendFile(filePath);
 });
 
 if (!process.env.VERCEL) {

@@ -4,53 +4,60 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
-  Pressable,
   ScrollView
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Redirect, router } from "expo-router";
-import { useEffect, useState } from "react";
+import { router } from "expo-router";
+import { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import EventForm from "../../../components/EventForm";
 import icons from "../../../constants/icons";
-import ToogleSwitch from "../../../components/ToogleSwitch";
+import ToggleSwitch from "../../../components/ToggleSwitch";
 import SubmitButton from "../../../components/SubmitButton";
+import {service} from "../../../utils/service";
 
 const CreateEvent = () => {
   const [image, setImage] = useState(null);
-
-  const [toogle, setToogle] = useState(true);
+  const [toggle, setToggle] = useState(true);
 
   const handleToggle = () => {
-    setToogle(!toogle);
-    setEvent({ ...event, acceptingInvoice: toogle });
+    setToggle(!toggle);
+    setEvent({ ...event, acceptingInvoice: toggle });
   };
 
   const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
+    const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       quality: 1,
+      base64: true,
     });
 
-    if (!result.canceled) {
-      const selectedImage = result.assets[0].uri; 
-      setImage(selectedImage);
-      setEvent({ ...event, banner: selectedImage }); 
+    if (result.canceled) {
+      return
     }
+
+    const image =  result.assets[0];
+    setEvent({ ...event, image: image.base64, mimeType: image.mimeType });
+    setImage(image.uri);
   };
 
   const [event, setEvent] = useState({
     name: "",
     budget: null,
     description: "",
-    acceptingInvoice: toogle,
-    banner: image,
+    acceptingInvoice: toggle,
+    image: image,
+    mimeType: "",
   });
 
-  const submit = () => {
-    console.log(event); //as of now form is just storing uri of the image for banner
-  };
+  async function submit() {
+    const response = await service.post("/event/new", event);
+    if (response.success) {
+      router.back();
+    }
+  }
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View className="h-full flex justify-start  px-4  bg-primary pt-[5%]">
@@ -136,7 +143,7 @@ const CreateEvent = () => {
               Accepting Invoices
             </Text>
             <View className="pb-5">
-              <ToogleSwitch handleToggle={handleToggle} toogle={!toogle} />
+              <ToggleSwitch handleToggle={handleToggle} toggle={!toggle} />
             </View>
           </View>
           <View className="my-6">

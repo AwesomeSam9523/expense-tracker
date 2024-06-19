@@ -11,7 +11,7 @@ export class APIService {
     return response;
   }
 
-  async handleError(res, path, payload, type) {
+  async handleError(res) {
     return Promise.reject(res)
   }
 
