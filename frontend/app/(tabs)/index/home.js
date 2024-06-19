@@ -1,23 +1,28 @@
 import "@/global.css";
-import {Image, View,TouchableOpacity, ScrollView} from "react-native";
+import {Image, View, TouchableOpacity, FlatList, RefreshControl} from "react-native";
 import icons from "../../../constants/icons"
 import React, {useEffect, useState} from "react";
 import {SafeAreaView} from "react-native-safe-area-context";
 import {service} from "../../../utils/service";
 import {EventCard} from "../../../components/EventCard";
 import SearchBar from "../../../components/SearchBar";
-import {router} from "expo-router";
 import AddButton from "../../../components/AddButton";
 
 function Index() {
   const [events, setEvents] = useState([]);
   const [searchPhrase, setSearchPhrase] = useState('');
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+  }, []);
 
   useEffect(() => {
     service.get(`/event/list?search=${searchPhrase}`).then((response) => {
       setEvents(response.data);
+      setRefreshing(false);
     });
-  }, [searchPhrase]);
+  }, [searchPhrase, refreshing]);
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -37,13 +42,16 @@ function Index() {
 
         </View>
 
-        <ScrollView className="flex w-full flex-grow max-h-[70%]">
-          <View className="flex flex-col w-full gap-6">
-            {events.map((event) => (
-              <EventCard key={event.id} name={event.name} image={event.image} budget={event.budget}/>
-            ))}
-          </View>
-        </ScrollView>
+        <FlatList
+          className="flex w-full flex-grow max-h-[70%]"
+          data={events}
+          renderItem={({item}) => (
+            <EventCard key={item.id} name={item.name} image={item.image} budget={item.budget}/>
+          )}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        />
 
         <AddButton text={"Add new event"} route={"create-event"}/>
 
