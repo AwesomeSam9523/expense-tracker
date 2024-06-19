@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Router } from 'express';
 import pool from '../utils/database.js';
-import fs from "fs";
+import axios from "axios";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -30,9 +30,23 @@ router.post('/new', async (req, res) => {
 
     const id = uuidv4();
     const fileExtension = mimeType.split('/')[1];
-    await fs.promises.writeFile(`./public/images/${id}.${fileExtension}`, image, 'base64');
+    try {
+      await axios.post('https://awesomesam.dev/api/ieee/upload', {
+        id,
+        image,
+        mimeType,
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${process.env.IEEE_CS_KEY}`
+        }
+      });
+    } catch (e) {
+      console.error(e);
+      return res.status(500).json({success: false, message: 'Internal Server Error'});
+    }
 
-    const imageUrl = `${process.env.API_URL}/images/${id}.${fileExtension}`;
+    const imageUrl = `https://awesomesam.dev/api/ieee/${id}.${fileExtension}`;
 
     await pool.query('INSERT INTO "public"."events" (id, name, description, budget, image, "createdAt", "createdBy", closed) '
       + 'VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [id, name, description, budget, imageUrl, new Date(), req.user.id, false])
