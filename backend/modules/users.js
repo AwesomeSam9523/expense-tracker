@@ -210,4 +210,22 @@ router.post('/enable', async (req, res) => {
   }
 });
 
+router.get('/all', async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({success: false, message: 'Unauthorized'});
+    }
+
+    if (req.user.role !== 'EC') {
+      return res.status(403).json({success: false, message: 'Insufficient Permissions'});
+    }
+
+    const data = await pool.query('SELECT "id", "name", "pfp", "enabled", "role" FROM "public"."users"');
+    res.status(200).json({success: true, data: data.rows});
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({success: false, message: 'Internal Server Error'});
+  }
+});
+
 export default router;
