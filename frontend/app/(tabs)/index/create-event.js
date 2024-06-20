@@ -52,7 +52,9 @@ const CreateEvent = () => {
   });
 
   async function submit() {
-    const response = await service.post("/event/new", event);
+    // const response = await service.post("/event/new", event);
+    const response = await service.post("/invoice/new", { ...event, eventId: '417de3c3-d49e-42d1-b4a3-e1073a2678e9', amount: 1000 });
+    console.debug(response);
     if (response.success) {
       router.back();
     }

@@ -21,9 +21,11 @@ const SignIn = () => {
 
   useEffect(() => {
     async function fetchData() {
-      const {data} = await service.get('/user/me');
-      console.log(data);
-      await setUserData(data);
+      const response = await service.get('/user/me');
+      console.log(response);
+      if (response.success) {
+        await setUserData(response.data);
+      }
     }
 
     fetchData();

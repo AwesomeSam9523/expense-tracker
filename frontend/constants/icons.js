@@ -26,6 +26,8 @@ import buttonIcon from "../assets/icons/button-icon.png"
 import userIcon from "../assets/icons/user.png"
 import deleteIcon from "../assets/icons/delete.png"
 import userPassword from "../assets/icons/password.png"
+import cross from "../assets/icons/cross.png"
+import correct from "../assets/icons/correct.png"
 
 export default {
   budget,
@@ -56,4 +58,6 @@ export default {
   userIcon,
   deleteIcon,
   userPassword,
+  cross,
+  correct,
 }
