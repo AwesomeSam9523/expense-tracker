@@ -51,30 +51,45 @@ const router = Router();
 //Login via username and password
 router.post('/login', async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, password, token } = req.body;
 
-    if (!username || !password) {
-      return res.status(400).json({ success: false, message: 'Username and password are required' });
-    }
-
-    const user = await User.findOne({ username });
-
-   
-    if (!user) {
-      return res.status(401).json({ success: false, message: 'Invalid username or password' });
+    if (token) {
+      // Validate the token
+      const user = await getUser(token);
+      if (user) {
+        return res.status(200).json({ success: true, message: 'Token is valid', user });
+      } else {
+        return res.status(401).json({ success: false, message: 'Invalid token' });
+      }
     }
 
     if (user.password !== password) {
       return res.status(401).json({ success: false, message: 'Invalid username or password' });
     }
-    req.user = user;
 
-    // Respond with the user data
-    res.status(200).json({ success: true, message: 'Login successful', data: req.user });
+    if (!user.enabled) {
+      return res.status(403).json({ success: false, message: 'User is disabled' });
+    }
+
+    // Generate a token
+    const token = uuidv4();
+
+   //token update
+    await pool.query('UPDATE "public"."users" SET "token" = $1 WHERE "id" = $2', [token, user.id]);
+
+    // Storing info in tokenMap
+    tokenMap[token] = {
+      id: user.id,
+      name: user.name,
+      pfp: user.pfp,
+      role: user.role,
+    };
+
+    res.status(200).json({ success: true, message: 'Login successful', token });
 
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: 'Error' });
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 });
 
