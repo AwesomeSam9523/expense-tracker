@@ -48,16 +48,33 @@ import pool from '../utils/database.js';
 
 const router = Router();
 
+//Login via username and password
 router.post('/login', async (req, res) => {
   try {
-    if (!req.user) {
-      return res.status(401).json({success: false, message: 'No token provided'});
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+      return res.status(400).json({ success: false, message: 'Username and password are required' });
     }
 
-    res.status(200).json({success: true, message: 'Login successful', data: req.user});
+    const user = await User.findOne({ username });
+
+   
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'Invalid username or password' });
+    }
+
+    if (user.password !== password) {
+      return res.status(401).json({ success: false, message: 'Invalid username or password' });
+    }
+    req.user = user;
+
+    // Respond with the user data
+    res.status(200).json({ success: true, message: 'Login successful', data: req.user });
+
   } catch (error) {
     console.error(error);
-    res.status(500).json({success: false, message: 'Internal Server Error'});
+    res.status(500).json({ success: false, message: 'Error' });
   }
 });
 
