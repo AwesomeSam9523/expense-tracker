@@ -1,5 +1,5 @@
-// const BASE_URL = 'http://192.168.1.7:3000';
-const BASE_URL = 'https://ieeecs-expense-tracker.vercel.app';
+const BASE_URL = 'http://192.168.1.7:3000';
+// const BASE_URL = 'https://ieeecs-expense-tracker.vercel.app';
 const TOKEN = '326490a0-9fc0-4ca3-a8bc-ac22dde0b710';
 console.log('BASE_URL', BASE_URL);
 

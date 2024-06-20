@@ -143,7 +143,7 @@ const CreateEvent = () => {
               Accepting Invoices
             </Text>
             <View className="pb-5">
-              <ToggleSwitch handleToggle={handleToggle} toggle={!toggle} />
+              <ToggleSwitch handleToggle={handleToggle} toggle={toggle} />
             </View>
           </View>
           <View className="my-6">
