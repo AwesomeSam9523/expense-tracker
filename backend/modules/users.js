@@ -45,6 +45,7 @@ This file has the following routes:
 import { v4 as uuidv4 } from 'uuid';
 import { Router } from 'express';
 import pool from '../utils/database.js';
+import hashPassword from "../utils/tools.js";
 
 const router = Router();
 
@@ -69,12 +70,12 @@ router.post('/add', async (req, res) => {
 
     // If the user is a JC they cannot add
     if (req.user.role === 'JC') {
-      return res.status(403).json({success: false, message: 'Unauthorized'});
+      return res.status(403).json({success: false, message: 'Insufficient Permissions'});
     }
 
-    const {name, pfp, role} = req.body;
-    if (!name || !pfp || !role) {
-      return res.status(400).json({success: false, message: 'Name, pfp and role are required'});
+    const {name, post, role, username} = req.body;
+    if (!name || !post || !role || !username) {
+      return res.status(400).json({success: false, message: 'Name, post, role and username are required'});
     }
 
     // If the user is a CC they cannot add another CC or EC.
@@ -88,8 +89,12 @@ router.post('/add', async (req, res) => {
     const userId = (data.rows.length === 0 ? 1000 : parseInt(data.rows[0].id, 10)) + 1;
 
     const generatedToken = uuidv4();
-    await pool.query('INSERT INTO "public"."users" ("id", "name", "pfp", "enabled", "role", "createdAt", "createdBy", "lastActive", "token")'
-      + 'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)', [userId, name, pfp, true, role, new Date(), req.user.id, null, generatedToken]);
+    const password = hashPassword(username);
+
+    await pool.query(
+      'INSERT INTO "public"."users" ("id", "name", "post", "enabled", "role", "createdAt", "createdBy", "lastActive", "token", "username", "password")'
+      + 'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) ORDER BY "createdAt" ASC', [userId, name, post, true, role, new Date(), req.user.id, null, generatedToken, username, password]
+    );
 
     res.status(201).json({
       success: true,
@@ -104,42 +109,6 @@ router.post('/add', async (req, res) => {
   } catch (e) {
     console.error(e);
     res.status(500).json({success: false, message: 'Internal Server Error'});
-  }
-});
-
-router.get('/token', async (req, res) => {
-  try {
-    if (!req.user) {
-      return res.status(401).json({success: false, message: 'Unauthorized'});
-    }
-
-    // Check if user is an EC
-    if (req.user.role !== 'EC') {
-      return res.status(403).json({success: false, message: 'Unauthorized'});
-    }
-    const {name} = req.query;
-    if (!name) {
-      return res.status(400).json({success: false, message: 'Name is required'});
-    }
-
-    // Get the token from the database
-    const data = await pool.query('SELECT "id", "role", "token", "enabled" FROM "public"."users" WHERE "name" = $1', [name]);
-    if (data.rowCount === 0) {
-      return res.status(404).json({success: false, message: 'User not found'});
-    }
-
-    res.status(200).json({
-      success: true,
-      data: {
-        id: data.rows[0].id,
-        role: data.rows[0].role,
-        token: data.rows[0].token,
-        enabled: data.rows[0].enabled,
-      },
-    });
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ success: false, message: 'Internal Server Error' })
   }
 });
 
@@ -220,7 +189,9 @@ router.get('/all', async (req, res) => {
       return res.status(403).json({success: false, message: 'Insufficient Permissions'});
     }
 
-    const data = await pool.query('SELECT "id", "name", "pfp", "enabled", "role" FROM "public"."users"');
+    const search = req.query.search || '';
+
+    const data = await pool.query('SELECT "id", "name", "pfp", "enabled", "role", "post", "username" FROM "public"."users" WHERE "username" ILIKE $1', [`%${search}%`]);
     res.status(200).json({success: true, data: data.rows});
   } catch (e) {
     console.error(e);
