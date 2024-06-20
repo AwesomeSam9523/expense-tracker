@@ -1,10 +1,7 @@
-import {View, Text, TextInput, TouchableOpacity, Image} from 'react-native'
-import React, {useState} from 'react'
-import icons from "../constants/icons"
+import {View, TextInput, Image} from 'react-native';
+import React from 'react';
 
 const EventForm = ({icon, value, placeholder, handleChangeText, ...props}) => {
-
-  const [showPassword, setShowPassword] = useState(false)
 
   return (
     <View className=" my-2 w-full ">
@@ -20,9 +17,9 @@ const EventForm = ({icon, value, placeholder, handleChangeText, ...props}) => {
           placeholderTextColor='#A6A6A6'
           selectionColor={'#ffffff'}
           onChangeText={handleChangeText}
-
+          {...props}
         />
-       
+
       </View>
     </View>
   )

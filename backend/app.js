@@ -27,7 +27,7 @@ app.use((req, res, next) => {
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(async (req, res, next) => {
-  if (!req.headers.authorization)
+  if (!req.headers.authorization && req.path !== '/user/login')
     return res.sendStatus(401);
 
   const token = req.headers.authorization.split(' ')[1];

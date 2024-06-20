@@ -2,6 +2,7 @@ import {v4 as uuidv4} from 'uuid';
 import {Router} from 'express';
 import pool from '../utils/database.js';
 import fs from 'fs';
+import axios from "axios";
 
 const router = Router();
 
@@ -13,21 +14,32 @@ router.post('/new', async (req, res) => {
     }
 
     // Get the file from body
-    const {amount, eventId} = req.query;
-    if (!amount || !eventId) {
-      return res.status(400).json({success: false, message: 'Amount and eventId are required'});
+    const {amount, eventId, image, mimeType} = req.body;
+    if (!amount || !eventId || !image || !mimeType) {
+      return res.status(400).json({success: false, message: 'Amount, eventId, image and mimeType are required'});
     }
 
-    if (!req.files || Object.keys(req.files).length === 0) {
-      return res.status(400).json({success: false, message: 'No file uploaded.'});
-    }
-    const file = req.files.file;
-    const name = `${req.user.id}-${uuidv4()}-${file.name}`;
-    await file.mv(`invoices/${name}`);
-
+    const fileExtension = mimeType.split('/')[1];
     const id = uuidv4();
+    try {
+      await axios.post('https://awesomesam.dev/api/ieee/upload', {
+        id,
+        image,
+        mimeType,
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${process.env.IEEE_CS_KEY}`
+        }
+      });
+    } catch (e) {
+      console.error(e);
+      return res.status(500).json({success: false, message: 'Internal Server Error'});
+    }
+
+    const imageUrl = `https://awesomesam.dev/api/ieee/${id}.${fileExtension}`;
     await pool.query('INSERT INTO "public"."invoices" (id, "fileUrl", amount, "createdAt", "createdBy", accepted, "actionedBy", "actionedAt", "eventId") ' +
-      'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)', [id, name, amount, new Date(), req.user.id, null, null, null, eventId]);
+      'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)', [id, imageUrl, amount, new Date(), req.user.id, null, null, null, eventId]);
 
     res.status(201).json({
       success: true,
@@ -82,16 +94,15 @@ router.get('/pending', async (req, res) => {
     }
 
     // Query pending invoices from the database
-    const rows = await pool.query('SELECT * FROM "public"."invoices" WHERE accepted = false');
+    const data = await pool.query(`
+      SELECT invoices."id", invoices."amount", e."name" as "eventName", u."name", u."username", "fileUrl", "eventId", u."pfp", u."role"
+      FROM "public"."invoices"
+      INNER JOIN public.events e on e.id = invoices."eventId" 
+      INNER JOIN public.users u on u.id = invoices."createdBy" 
+      WHERE accepted IS NULL ORDER BY invoices."createdAt" DESC`
+    );
 
-    const pendingInvoices = rows.map(row => ({
-      id: row.id,
-      amount: row.amount,
-      eventId: row.eventId,
-    }));
-
-    // Respond with success and list of pending invoices
-    res.status(200).json({success: true, data: pendingInvoices});
+    res.status(200).json({success: true, data: data.rows});
   } catch (error) {
     console.error(error);
     res.status(500).json({success: false, message: 'Internal Server Error'});

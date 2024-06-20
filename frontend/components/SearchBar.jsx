@@ -15,7 +15,7 @@ function handleInput(phrase, setSearchPhrase) {
   }, 200);
 }
 
-const SearchBar = ({setSearchPhrase}) => {
+const SearchBar = ({setSearchPhrase, placeholder}) => {
   const [currentPhrase, setCurrentPhrase] = useState('');
 
   return (
@@ -26,7 +26,7 @@ const SearchBar = ({setSearchPhrase}) => {
 
           <TextInput
             className="w-full pl-2 font-pregular text-xl text-white"
-            placeholder="Search any event"
+            placeholder={placeholder}
             placeholderTextColor="#9A9393"
             value={currentPhrase}
             onChangeText={(phrase) => {

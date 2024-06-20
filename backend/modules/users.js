@@ -54,34 +54,39 @@ router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
 
-
-    if (user.password !== password) {
-      return res.status(401).json({ success: false, message: 'Invalid username or password' });
-    }
-      
-    // Query to find the user
-    const data = await pool.query('SELECT "id", "name", "pfp", "role", "enabled", "password", "token" FROM "public"."users" WHERE "username" = $1', [username]);
+    const data = await pool.query('SELECT "password", "token" FROM "public"."users" WHERE "username" = $1', [username]);
 
     if (data.rowCount === 0) {
-      return res.status(404).json({ success: false, message: 'User does not exist' });
+      return res.status(404).json({success: false, message: 'User does not exist'});
+    }
 
     const user = data.rows[0];
+
+    if (user.password !== hashPassword(password)) {
+      return res.status(401).json({ success: false, message: 'Invalid username or password' });
+    }
 
     if (!user.enabled) {
       return res.status(403).json({ success: false, message: 'User is disabled' });
     }
 
-    // Generate a token
-    const token = uuidv4();
-
-   //token update
-    await pool.query('UPDATE "public"."users" SET "token" = $1 WHERE "id" = $2', [token, user.id]);
-
-    res.status(200).json({ success: true, message: 'Login successful', data : token });
-
+    res.status(200).json({ success: true, message: 'Login successful', data : user.token });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+});
+
+router.get('/me', async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({success: false, message: 'Unauthorized'});
+    }
+
+    res.status(200).json({success: true, data: req.user});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({success: false, message: 'Internal Server Error'});
   }
 });
 
@@ -116,7 +121,7 @@ router.post('/add', async (req, res) => {
 
     await pool.query(
       'INSERT INTO "public"."users" ("id", "name", "post", "enabled", "role", "createdAt", "createdBy", "lastActive", "token", "username", "password")'
-      + 'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) ORDER BY "createdAt" ASC', [userId, name, post, true, role, new Date(), req.user.id, null, generatedToken, username, password]
+      + 'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)', [userId, name, post, true, role, new Date(), req.user.id, null, generatedToken, username, password]
     );
 
     res.status(201).json({
@@ -214,7 +219,11 @@ router.get('/all', async (req, res) => {
 
     const search = req.query.search || '';
 
-    const data = await pool.query('SELECT "id", "name", "pfp", "enabled", "role", "post", "username" FROM "public"."users" WHERE "username" ILIKE $1', [`%${search}%`]);
+    const data = await pool.query('SELECT "id", "name", "pfp", "enabled", "role", "post", "username" FROM "public"."users" WHERE "username" ILIKE $1  ORDER BY "createdAt"', [`%${search}%`]);
+
+    const roles = ['EC', 'CC', 'JC'];
+    data.rows.sort((a, b) => roles.indexOf(a.role) - roles.indexOf(b.role));
+
     res.status(200).json({success: true, data: data.rows});
   } catch (e) {
     console.error(e);
