@@ -98,5 +98,73 @@ router.get('/pending', async (req, res) => {
   }
 });
 
+
+router.post('/accept', async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({success: false, message: 'Unauthorized'});
+    }
+
+    if (req.user.role !== 'EC') {
+      return res.status(403).json({success: false, message: 'Insufficient Permissions'});
+    }
+
+    const {id} = req.body;
+    if (!id) {
+      return res.status(400).json({success: false, message: 'Invoice ID is required'});
+    }
+
+    const data = await pool.query('SELECT * FROM "public"."invoices" WHERE id = $1', [id]);
+    if (data.rowCount === 0) {
+      return res.status(404).json({success: false, message: 'Invoice not found'});
+    }
+
+    if (data.rows[0].accepted !== null) {
+      return res.status(400).json({success: false, message: 'Invoice already actioned at'});
+    }
+
+    await pool.query('UPDATE "public"."invoices" SET accepted = true, "actionedBy" = $1, "actionedAt" = $2 WHERE id = $3', [req.user.id, new Date(), id]);
+
+    res.status(200).json({success: true, message: 'Invoice accepted!'});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({success: false, message: 'Internal Server Error'});
+  }
+});
+
+
+router.post('/reject', async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({success: false, message: 'Unauthorized'});
+    }
+
+    if (req.user.role !== 'EC') {
+      return res.status(403).json({success: false, message: 'Insufficient Permissions'});
+    }
+
+    const {id} = req.body;
+    if (!id) {
+      return res.status(400).json({success: false, message: 'Invoice ID is required'});
+    }
+
+    const data = await pool.query('SELECT * FROM "public"."invoices" WHERE id = $1', [id]);
+    if (data.rowCount === 0) {
+      return res.status(404).json({success: false, message: 'Invoice not found'});
+    }
+
+    if (data.rows[0].accepted !== null) {
+      return res.status(400).json({success: false, message: 'Invoice already actioned at'});
+    }
+
+    await pool.query('UPDATE "public"."invoices" SET accepted = false, "actionedBy" = $1, "actionedAt" = $2 WHERE id = $3', [req.user.id, new Date(), id]);
+
+    res.status(200).json({success: true, message: 'Invoice rejected!'});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({success: false, message: 'Internal Server Error'});
+  }
+});
+
 // Use the router
 export default router;
