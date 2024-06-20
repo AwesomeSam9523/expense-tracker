@@ -6,6 +6,7 @@ import SearchBar from "../../../components/SearchBar";
 import AddButton from "../../../components/AddButton";
 import {UserCard} from "../../../components/UserCard";
 import {service} from "../../../utils/service";
+import TopHeader from "../../../components/TopHeader";
 
 export default function UserManagementScreen() {
 
@@ -28,10 +29,7 @@ export default function UserManagementScreen() {
     <SafeAreaView style={{flex: 1}}>
 
       <View className="w-full h-full flex justify-start items-center px-4 bg-primary pt-[5%]">
-        <View className="flex flex-row items-center justify-between w-full">
-          <Image source={icons.cs} className="w-44 h-16" resizeMode="contain"/>
-          <Image source={icons.userIcon} className="w-16 h-16" resizeMode="contain"/>
-        </View>
+        <TopHeader />
 
         <View className="flex flex-row w-full justify-between items-center py-8">
           <SearchBar setSearchPhrase={setSearchPhrase} placeholder={"Search any user"} />

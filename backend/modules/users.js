@@ -62,6 +62,19 @@ router.post('/login', async (req, res) => {
   }
 });
 
+router.get('/me', async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({success: false, message: 'Unauthorized'});
+    }
+
+    res.status(200).json({success: true, data: req.user});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({success: false, message: 'Internal Server Error'});
+  }
+});
+
 router.post('/add', async (req, res) => {
   try {
     if (!req.user) {
@@ -93,7 +106,7 @@ router.post('/add', async (req, res) => {
 
     await pool.query(
       'INSERT INTO "public"."users" ("id", "name", "post", "enabled", "role", "createdAt", "createdBy", "lastActive", "token", "username", "password")'
-      + 'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) ORDER BY "createdAt" ASC', [userId, name, post, true, role, new Date(), req.user.id, null, generatedToken, username, password]
+      + 'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)', [userId, name, post, true, role, new Date(), req.user.id, null, generatedToken, username, password]
     );
 
     res.status(201).json({
@@ -191,7 +204,11 @@ router.get('/all', async (req, res) => {
 
     const search = req.query.search || '';
 
-    const data = await pool.query('SELECT "id", "name", "pfp", "enabled", "role", "post", "username" FROM "public"."users" WHERE "username" ILIKE $1', [`%${search}%`]);
+    const data = await pool.query('SELECT "id", "name", "pfp", "enabled", "role", "post", "username" FROM "public"."users" WHERE "username" ILIKE $1  ORDER BY "createdAt"', [`%${search}%`]);
+
+    const roles = ['EC', 'CC', 'JC'];
+    data.rows.sort((a, b) => roles.indexOf(a.role) - roles.indexOf(b.role));
+
     res.status(200).json({success: true, data: data.rows});
   } catch (e) {
     console.error(e);

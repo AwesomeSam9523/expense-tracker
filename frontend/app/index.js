@@ -1,10 +1,12 @@
 import {View, Text, Image, ScrollView} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import icons from "../constants/icons";
 import FormField from '../components/FormField';
 import SubmitButton from "../components/SubmitArrow"
 import {router} from 'expo-router';
+import {service} from "@/utils/service";
+import {setUserData} from "@/utils/userdata";
 
 const SignIn = () => {
 
@@ -16,6 +18,16 @@ const SignIn = () => {
   const submit = () => {
     router.replace("(tabs)");
   };
+
+  useEffect(() => {
+    async function fetchData() {
+      const {data} = await service.get('/user/me');
+      console.log(data);
+      await setUserData(data);
+    }
+
+    fetchData();
+  }, []);
 
   return (
 

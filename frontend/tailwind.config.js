@@ -14,7 +14,7 @@ module.exports = {
         textgray: "#A6A6A6",
         ECcolor: "#ff4c4c",
         CCcolor: "#f1d72e",
-        JCcolor: "#43ff3c",
+        JCcolor: "#68ff61",
       },
       fontFamily : {
         bextrabold : ["Barlow-ExtraBold", "sans-sarif"],
