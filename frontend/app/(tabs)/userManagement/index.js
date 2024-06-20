@@ -34,9 +34,15 @@ export default function UserManagementScreen() {
         <View className="flex flex-row w-full justify-between items-center py-8">
           <SearchBar setSearchPhrase={setSearchPhrase} placeholder={"Search any user"} />
 
-          <TouchableOpacity>
-            <Image source={icons.filter} className="w-8 h-8" resizeMode="contain"/>
-          </TouchableOpacity>
+          <View className="flex-1 items-center justify-center">
+            <TouchableOpacity>
+              <Image
+                source={icons.filter}
+                className="w-8 h-8"
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          </View>
         </View>
 
         <FlatList
