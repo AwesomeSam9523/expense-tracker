@@ -17,7 +17,7 @@ function TopHeader() {
     <View className="flex flex-row items-center justify-between w-full">
       <Image source={icons.cs} className="w-44 h-16" resizeMode="contain"/>
       {userData.pfp
-        ? <Image source={{uri: userData.pfp}} className="w-16 h-16 rounded-full" resizeMode="contain" />
+        ? <Image source={{uri: userData.pfp}} className="w-16 h-16 rounded-full" resizeMode="cover" />
         : <Image source={icons.userIcon} className="w-16 h-16 rounded-full" resizeMode="contain" />}
     </View>
   );

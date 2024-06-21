@@ -24,7 +24,7 @@ export function UserCard({user}) {
           uri: pfp,
           method: 'GET',
           headers: { Authorization: 'Bearer ' + token },
-        }} className="w-12 h-12 rounded-full" resizeMode="contain" />
+        }} className="w-12 h-12 rounded-full" resizeMode="cover" />
           : <Image source={icons.userIcon} className="w-12 h-12 rounded-full" resizeMode="contain" />
         }
         <View>
