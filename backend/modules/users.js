@@ -231,4 +231,29 @@ router.get('/all', async (req, res) => {
   }
 });
 
+router.post('/changePassword', async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({success: false, message: 'Unauthorized'});
+    }
+
+    const { newPassword } = req.body;
+    if (newPassword.length < 8) {
+      return res.status(400).json({success: false, message: 'Password must be atleast 8 characters long'});
+    }
+
+    const newToken = uuidv4();
+    const newPasswordHash = hashPassword(newPassword);
+    await pool.query(
+      'UPDATE "public"."users" SET "password" = $1, "token" = $2, "firstLogin" = false WHERE "id" = $3',
+      [newPasswordHash, newToken, req.user.id]
+    );
+
+    res.status(201).json({success: true, message: 'Password changed', data: newToken});
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({success: false, message: 'Internal Server Error'});
+  }
+});
+
 export default router;

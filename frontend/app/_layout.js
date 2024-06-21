@@ -27,11 +27,12 @@ const RootLayout = () => {
 
   return (
     <>
+      <StatusBar backgroundColor="#151515"/>
       <Stack>
         <Stack.Screen name="index" options={{headerShown: false}}/>
+        <Stack.Screen name='first-login' options={{headerShown:false}} />
         <Stack.Screen name="(tabs)" options={{headerShown: false}}/>
       </Stack>
-      <StatusBar backgroundColor="#151515"/>
     </>
   );
 }

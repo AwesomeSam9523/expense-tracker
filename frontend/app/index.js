@@ -32,8 +32,13 @@ const SignIn = () => {
       const response = await service.get('/user/me');
       console.log(response);
       if (response.success) {
-        await setUserData(response.data);
-        router.replace("(tabs)");
+        const {data} = response;
+        await setUserData(data);
+        if (!data.firstLogin) {
+          router.replace("(tabs)");
+        } else {
+          router.replace("/first-login");
+        }
       }
     }
 
