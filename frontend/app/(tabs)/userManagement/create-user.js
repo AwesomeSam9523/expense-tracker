@@ -59,14 +59,14 @@ const CreateEvent = () => {
         <ScrollView className="flex w-full flex-grow max-h-[100%]">
           <View className="my-16 flex items-center">
             <EventForm
-              icon={icons.profile}
+              icon={icons.user}
               value={user.name}
               handleChangeText={(e) => setUser({ ...user, name: e, username: e.replaceAll(' ', '').toLowerCase() + discriminator })}
               placeholder="Full name"
             />
 
             <EventForm
-              icon={icons.profile}
+              icon={icons.designation}
               value={user.post}
               handleChangeText={(e) => setUser({ ...user, post: e })}
               placeholder="Post"
@@ -75,7 +75,7 @@ const CreateEvent = () => {
             <View className="flex flex-row w-full px-10 justify-between py-5">
               {radioButtonsData.map((data, key) => {
                 return (
-                  <View key={key} className={`flex flex-row rounded-full border-4 px-6 py-2 ${user.role === data ? 'border-secondary' : 'border-gray'}`}>
+                  <View key={key} className={`flex flex-row rounded-full border-2 px-6 py-2 mx-5 ${user.role === data ? 'border-secondary' : 'border-gray'}`}>
                     <TouchableOpacity
                       className="flex flex-row w-full"
                       onPress={()=> {setUser({...user, role: data})}}>
@@ -88,7 +88,7 @@ const CreateEvent = () => {
             </View>
 
             <EventForm
-              icon={icons.profile}
+              icon={icons.id}
               placeholder={user.username}
               editable={false}
             />

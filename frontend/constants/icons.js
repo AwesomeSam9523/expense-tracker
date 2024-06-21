@@ -28,7 +28,8 @@ import deleteIcon from "../assets/icons/delete.png"
 import userPassword from "../assets/icons/password.png"
 import cross from "../assets/icons/cross.png"
 import correct from "../assets/icons/correct.png"
-
+import designation from "../assets/icons/designation.png"
+import id from "../assets/icons/id.png"
 export default {
   budget,
   cs,
@@ -60,4 +61,6 @@ export default {
   userPassword,
   cross,
   correct,
+  designation,
+  id
 }

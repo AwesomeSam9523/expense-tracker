@@ -6,7 +6,7 @@ const SubmitButton = ({
     isLoading
   }) => {
     return (
-      <View className={`bg-transparent border-2 border-secondary rounded-full px-8 h-16 w-36  justify-center items-center ${isLoading ? "opacity-50" : "opacity-100"} `}>
+      <View className={`bg-transparent border-2 border-secondary rounded-full px-8 h-16 w-40  justify-center items-center ${isLoading ? "opacity-50" : "opacity-100"} `}>
         <TouchableOpacity
           onPress={handlePress}
           disabled={isLoading}       
