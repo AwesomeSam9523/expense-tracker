@@ -98,5 +98,42 @@ router.get('/pending', async (req, res) => {
   }
 });
 
+// Route to get all invoices by eventId
+router.get('/event/:eventId', async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({success: false, message: 'Unauthorized'});
+    }
+
+    const { eventId } = req.params;
+    const rows = await pool.query('SELECT * FROM "public"."invoices" WHERE "eventId" = $1', [eventId]);
+
+    if (rows.rowCount === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'No invoices found for this eventId',
+      });
+    }
+
+    const invoices = rows.rows.map(row => ({
+      id: row.id,
+      fileUrl: row.fileUrl,
+      amount: row.amount,
+      createdAt: row.createdAt,
+      createdBy: row.createdBy,
+      accepted: row.accepted,
+      actionBy: row.actionBy,
+      actiondAt: row.actiondAt,
+      eventId: row.eventId,
+    }));
+
+    // Respond with success and invoice
+    res.status(200).json({success: true, data: invoices});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({success: false, message: 'Internal Server Error'});
+  }
+});
+
 // Use the router
 export default router;
