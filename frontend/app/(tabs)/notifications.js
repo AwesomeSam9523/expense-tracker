@@ -1,27 +1,48 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import React, {useEffect, useState} from "react";
+import {View, Text, RefreshControl, FlatList} from "react-native";
+import {SafeAreaView} from "react-native-safe-area-context";
 import TopHeader from "../../components/TopHeader";
 import NotificationCard from "../../components/NotificationCard";
+import {service} from "../../utils/service";
 
 export default function NotificationsScreen() {
-  return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View className="w-full h-full  px-4 bg-primary pt-[5%]">
-        <View className="flex justify-start items-center">
-          <TopHeader />
-        </View>
-        <View className="flex items-center  ">
-          <Text className=" text-4xl text-white  font-bold pt-[8%]">
-            Notifications
-          </Text>
-          <View className="my-16 w-full">
-          <NotificationCard accepted={false} invoiceId={"#0000"} event={"Hackerzstreet"} />
-          <NotificationCard accepted={true} invoiceId={"#0001"} event={"Weakestlink"} />
-        </View>
-        </View>
 
-        
+  const [notifications, setNotifications] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+  }, []);
+
+  useEffect(() => {
+    service.get('/notification').then((response) => {
+      setNotifications(response.data);
+      setRefreshing(false);
+      console.log(response.data);
+    });
+  }, [refreshing]);
+
+  return (
+    <SafeAreaView style={{flex: 1}}>
+      <View className="w-full h-full flex justify-start items-center px-4 bg-primary pt-[5%]">
+
+        <TopHeader/>
+
+        <Text className="text-4xl text-white font-bold pt-[8%]">
+          Notifications
+        </Text>
+
+        <FlatList
+          className="flex w-full flex-grow max-h-[70%] pt-[8%]"
+          data={notifications}
+          renderItem={({item}) => (
+            <NotificationCard key={item.id} invoiceData={item}/>
+          )}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>
+          }
+        />
+
       </View>
     </SafeAreaView>
   );

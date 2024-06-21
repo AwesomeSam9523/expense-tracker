@@ -15,6 +15,7 @@ module.exports = {
         ECcolor: "#ff4c4c",
         CCcolor: "#f1d72e",
         JCcolor: "#68ff61",
+        notifUnread : "rgba(249,163,26,0.25)",
       },
       fontFamily : {
         bextrabold : ["Barlow-ExtraBold", "sans-sarif"],
