@@ -54,7 +54,7 @@ router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    const data = await pool.query('SELECT "password", "token" FROM "public"."users" WHERE "username" = $1', [username]);
+    const data = await pool.query('SELECT "password", "token", "enabled" FROM "public"."users" WHERE "username" = $1', [username]);
 
     if (data.rowCount === 0) {
       return res.status(404).json({success: false, message: 'User does not exist'});

@@ -1,12 +1,17 @@
 import {Image} from "react-native";
 import {useLocalSearchParams} from "expo-router";
 import {SafeAreaView} from "react-native-safe-area-context";
-
-const token = "326490a0-9fc0-4ca3-a8bc-ac22dde0b710"
+import {useEffect, useState} from "react";
+import {getToken} from "../../../utils/userdata";
 
 function ViewInvoice() {
 
   const { fileUrl} = useLocalSearchParams();
+  const [token, setToken] = useState('');
+
+  useEffect(() => {
+    getToken().then(setToken);
+  }, []);
 
   return (
     <SafeAreaView style={{flex: 1}}>

@@ -2,10 +2,12 @@ import {View, Image, Text, TouchableOpacity} from "react-native";
 import icons from "../constants/icons";
 import {service} from "../utils/service";
 import {router} from "expo-router";
-const token = '326490a0-9fc0-4ca3-a8bc-ac22dde0b710';
+import {useEffect, useState} from "react";
+import {getToken} from "../utils/userdata";
 
 export function PendingInvoiceCard({invoice, onAction}) {
   const {amount, eventId, eventName, fileUrl, id, name, pfp, username, role} = invoice;
+  const [token, setToken] = useState('');
 
   async function handleAction(action) {
     const res = await service.post(`/invoice/${action}`, { id });
@@ -14,6 +16,10 @@ export function PendingInvoiceCard({invoice, onAction}) {
       onAction();
     }
   }
+
+  useEffect(() => {
+    getToken().then(setToken);
+  }, []);
 
   return (
     <TouchableOpacity onPress={() => router.push('pendingInvoice/view-invoice?fileUrl=' + fileUrl)}>

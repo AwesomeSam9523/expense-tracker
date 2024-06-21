@@ -6,7 +6,7 @@ import FormField from '../components/FormField';
 import SubmitButton from "../components/SubmitArrow"
 import {router} from 'expo-router';
 import {service} from "@/utils/service";
-import {setUserData} from "@/utils/userdata";
+import {setUserData, setToken} from "@/utils/userdata";
 
 const SignIn = () => {
 
@@ -15,9 +15,17 @@ const SignIn = () => {
     password: ""
   });
 
-  const submit = () => {
-    router.replace("(tabs)");
-  };
+  const [request, setRequest] = useState('');
+
+  async function submit() {
+    const response = await service.post('/user/login', form);
+    console.log(response);
+    if (response.success) {
+      const token = response.data;
+      await setToken(token);
+      setRequest(token);
+    }
+  }
 
   useEffect(() => {
     async function fetchData() {
@@ -25,11 +33,12 @@ const SignIn = () => {
       console.log(response);
       if (response.success) {
         await setUserData(response.data);
+        router.replace("(tabs)");
       }
     }
 
     fetchData();
-  }, []);
+  }, [request]);
 
   return (
 

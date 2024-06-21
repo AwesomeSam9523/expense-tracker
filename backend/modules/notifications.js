@@ -30,7 +30,7 @@ router.post('/read', async (req, res) => {
       return res.status(400).json({success: false, message: 'Notification ID is required'});
     }
 
-    await pool.query('UPDATE "public"."notifications" SET "read" = true AND "readAt" = NOW() WHERE "id" = $1 AND "userId" = $2', [id, req.user.id]);
+    await pool.query('UPDATE "public"."notifications" SET "read" = $3 AND "readAt" = NOW() WHERE "id" = $1 AND "userId" = $2', [id, req.user.id, true]);
     res.status(200).json({success: true, message: 'Notification read!'});
   } catch (e) {
     console.error(e);

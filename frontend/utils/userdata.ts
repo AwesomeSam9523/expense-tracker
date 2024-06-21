@@ -18,4 +18,20 @@ async function setUserData(value: Object) {
   }
 }
 
-export { getUserData, setUserData };
+async function setToken(value: string) {
+  try {
+    await AsyncStorage.setItem('token', value);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function getToken() {
+  try {
+    return await AsyncStorage.getItem('token');
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export { getUserData, setUserData, setToken, getToken };
