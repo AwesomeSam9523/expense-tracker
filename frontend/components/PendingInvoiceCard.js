@@ -29,7 +29,7 @@ export function PendingInvoiceCard({invoice, onAction}) {
               uri: pfp,
               method: 'GET',
               headers: { Authorization: 'Bearer ' + token },
-            }} className="w-14 h-14 rounded-full" resizeMode="contain" />
+            }} className="w-14 h-14 rounded-full" resizeMode="cover" />
             : <Image source={icons.userIcon} className="w-14 h-14 rounded-full" resizeMode="contain" />
           }
           <View>
