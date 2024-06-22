@@ -4,11 +4,14 @@ import {SafeAreaView} from "react-native-safe-area-context";
 import TopHeader from "../../../components/TopHeader";
 import {service} from "../../../utils/service";
 import PendingInvoiceCard from "../../../components/PendingInvoiceCard";
+import {getUserData} from "../../../utils/userdata";
+import NotAuthorized from "../../../components/NotAuthorized";
 
 export default function PendingInvoices() {
 
   const [pendingInvoices, setPendingInvoices] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [userData, setUserData] = useState({});
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -22,24 +25,30 @@ export default function PendingInvoices() {
     });
   }, [refreshing]);
 
+  useEffect(() => {
+    getUserData().then(setUserData);
+  }, []);
+
   return (
     <SafeAreaView style={{flex: 1}}>
-      <View className="w-full h-full flex justify-start items-center px-4 bg-primary pt-[5%]">
-        <TopHeader />
+      {userData.role === 'EC' ?
+        <View className="w-full h-full flex justify-start items-center px-4 bg-primary pt-[5%]">
+          <TopHeader />
 
-        <Text className="text-4xl text-white font-bold pt-[8%]">Pending Invoices</Text>
+          <Text className="text-4xl text-white font-bold pt-[8%]">Pending Invoices</Text>
 
-        <FlatList
-          className="flex w-full flex-grow max-h-[70%] pt-[8%]"
-          data={pendingInvoices}
-          renderItem={({item}) => (
-            <PendingInvoiceCard key={item.id} invoice={item} onAction={onRefresh} />
-          )}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-        />
-      </View>
+          <FlatList
+            className="flex w-full flex-grow max-h-[70%] pt-[8%]"
+            data={pendingInvoices}
+            renderItem={({item}) => (
+              <PendingInvoiceCard key={item.id} invoice={item} onAction={onRefresh} />
+            )}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+          />
+        </View>
+      : <NotAuthorized />}
     </SafeAreaView>
   );
 }
