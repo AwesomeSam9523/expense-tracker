@@ -92,6 +92,32 @@ router.post('/edit', async (req, res) => {
   }
 });
 
+router.post('/delete', async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({success: false, message: 'Unauthorized'});
+    }
+
+    if (req.user.role !== 'EC') {
+      return res.status(403).json({success: false, message: 'Insufficient Permissions'});
+    }
+
+    const { id } = req.body;
+    if (!id) {
+      return res.status(400).json({success: false, message: 'ID is required'});
+    }
+
+    await pool.query('DELETE FROM "public"."events" WHERE id = $1', [id]);
+    res.status(201).json({
+      success: true,
+      message: 'Event deleted!',
+    });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({success: false, message: 'Internal Server Error'});
+  }
+});
+
 router.post('/close', async (req, res) => {
   try {
     if (!req.user) {
@@ -108,11 +134,7 @@ router.post('/close', async (req, res) => {
       return res.status(400).json({success: false, message: 'ID is required'});
     }
 
-    if (value !== true || value !== false) {
-      return res.status(400).json({success: false, message: 'Value must be true/false'});
-    }
-
-    await pool.query('UPDATE "public"."events" SET closed = $2 WHERE id = $1', [id, value]);
+    await pool.query('UPDATE "public"."events" SET closed = $2 WHERE id = $1', [id, !!value]);
     res.status(201).json({
       success: true,
       message: 'Event closed!',
