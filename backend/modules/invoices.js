@@ -163,5 +163,44 @@ router.post('/reject', async (req, res) => {
   }
 });
 
+// Route to get all invoices by eventId
+router.get('/event/:eventId', async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({success: false, message: 'Unauthorized'});
+    }
+
+    const { eventId } = req.params;
+    let query;
+    let queryParams;
+
+    if (req.user.role === 'EC') {
+      // EC can access all invoices for the entered eventid 
+      query = 'SELECT id, fileUrl, amount, createdAt, createdBy, accepted, actionBy, actiondAt, eventId FROM "public"."invoices" WHERE "eventId" = $1';
+      queryParams = [eventId];
+    } else if (req.user.role === 'JC' || req.user.role === 'CC') {
+      // JC or CC can access only their invoices for the entered eventid 
+      query = 'SELECT id, fileUrl, amount, createdAt, createdBy, accepted, actionBy, actiondAt, eventId FROM "public"."invoices" WHERE "eventId" = $1 AND "createdBy" = $2';
+      queryParams = [eventId, req.user.id];
+    } else {
+      return res.status(403).json({success: false, message: 'Insufficient Permissions'});
+    }
+
+    const rows = await pool.query(query, queryParams);
+
+    if (rows.rowCount === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'No invoices found for this eventId',
+      });
+    }
+
+    res.status(200).json({success: true, data: rows.rows});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({success: false, message: 'Internal Server Error'});
+  }
+});
+
 // Use the router
 export default router;
