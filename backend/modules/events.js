@@ -131,7 +131,7 @@ router.get('/list', async (req, res) => {
 
     const search = req.query.search || '';
 
-    const data = await pool.query('SELECT id, name, description, date, budget, image, "createdAt", closed FROM "public"."events" WHERE closed = false AND name ILIKE $1', [`%${search}%`]);
+    const data = await pool.query('SELECT id, name, budget, image, "createdAt", closed FROM "public"."events" WHERE closed = false AND name ILIKE $1', [`%${search}%`]);
     res.status(200).json({
       success: true,
       data: data.rows,
@@ -154,8 +154,8 @@ router.get('/:id', async (req, res) => {
       return res.status(400).json({success: false, message: 'ID is required'});
     }
 
-    const data = await pool.query('SELECT id, name, description, date, budget, image, "createdAt", closed FROM "public"."events" WHERE id = $1', [id]);
-    if (data.rows.length === 0) {
+    const data = await pool.query('SELECT id, name, description, date, budget, expenditure, image, "createdAt", closed FROM "public"."events" WHERE id = $1', [id]);
+    if (data.rowCount === 0) {
       return res.status(404).json({success: false, message: 'Event not found'});
     }
 
