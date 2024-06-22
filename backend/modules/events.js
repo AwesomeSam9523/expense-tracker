@@ -142,4 +142,31 @@ router.get('/list', async (req, res) => {
   }
 });
 
+router.get('/:id', async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({success: false, message: 'Unauthorized'});
+    }
+
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({success: false, message: 'ID is required'});
+    }
+
+    const data = await pool.query('SELECT id, name, description, date, budget, image, "createdAt", closed FROM "public"."events" WHERE id = $1', [id]);
+    if (data.rows.length === 0) {
+      return res.status(404).json({success: false, message: 'Event not found'});
+    }
+
+    res.status(200).json({
+      success: true,
+      data: data.rows[0],
+    });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({success: false, message: 'Internal Server Error'});
+  }
+});
+
 export default router;
