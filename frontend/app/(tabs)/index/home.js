@@ -14,11 +14,13 @@ import { EventCard } from "../../../components/EventCard";
 import SearchBar from "../../../components/SearchBar";
 import AddButton from "../../../components/AddButton";
 import TopHeader from "../../../components/TopHeader";
+import {getUserData} from "../../../utils/userdata";
 
 function Index() {
   const [events, setEvents] = useState([]);
   const [searchPhrase, setSearchPhrase] = useState("");
   const [refreshing, setRefreshing] = React.useState(false);
+  const [userData, setUserData] = useState({});
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -30,6 +32,10 @@ function Index() {
       setRefreshing(false);
     });
   }, [searchPhrase, refreshing]);
+
+  useEffect(() => {
+    getUserData().then(setUserData);
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -59,9 +65,7 @@ function Index() {
           renderItem={({ item }) => (
             <EventCard
               key={item.id}
-              name={item.name}
-              image={item.image}
-              budget={item.budget}
+              event={item}
             />
           )}
           refreshControl={
@@ -69,7 +73,7 @@ function Index() {
           }
         />
 
-        <AddButton text={"Add new event"} route={"create-event"} />
+        {userData.role === 'EC' ? <AddButton text={"Add new event"} route={"create-event"} /> : null}
       </View>
     </SafeAreaView>
   );

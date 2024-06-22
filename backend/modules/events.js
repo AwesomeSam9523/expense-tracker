@@ -137,7 +137,7 @@ router.post('/close', async (req, res) => {
     await pool.query('UPDATE "public"."events" SET closed = $2 WHERE id = $1', [id, !!value]);
     res.status(201).json({
       success: true,
-      message: 'Event closed!',
+      message: `Event ${value ? 'closed' : 'opened'}!`
     });
   } catch (e) {
     console.error(e);

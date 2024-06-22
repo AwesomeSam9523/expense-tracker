@@ -97,7 +97,7 @@ const SignIn = () => {
             />
           </View>
         </View>
-          {errorMessage && <Text className="text-red-500 text-xl">{errorMessage}</Text>}
+          {errorMessage ? <Text className="text-red-500 text-xl">{errorMessage}</Text> : null}
         <View className="my-12">
           <SubmitButton handlePress={submit} isLoading={loading}/>
         </View>

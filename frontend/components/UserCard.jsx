@@ -106,7 +106,7 @@ export function UserCard({user}) {
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={deleteUser}>
-            <View className="bg-[#490011] p-1 rounded-full">
+            <View className="bg-fadered p-1 rounded-full">
               <Image source={icons.deleteIcon} className="w-5 h-5 m-1" resizeMode="contain" />
             </View>
           </TouchableOpacity>

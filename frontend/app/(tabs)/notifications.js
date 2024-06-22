@@ -18,7 +18,6 @@ export default function NotificationsScreen() {
     service.get('/notification').then((response) => {
       setNotifications(response.data);
       setRefreshing(false);
-      console.log(response.data);
     });
   }, [refreshing]);
 
