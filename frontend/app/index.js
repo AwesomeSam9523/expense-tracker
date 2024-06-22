@@ -1,12 +1,12 @@
-import { View, Text, Image, ScrollView } from "react-native";
-import React, { useEffect, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {View, Text, Image, ScrollView} from "react-native";
+import React, {useEffect, useState} from "react";
+import {SafeAreaView} from "react-native-safe-area-context";
 import icons from "../constants/icons";
 import FormField from "../components/FormField";
 import SubmitButton from "../components/SubmitArrow";
-import { router } from "expo-router";
-import { service } from "@/utils/service";
-import { setUserData, setToken } from "@/utils/userdata";
+import {router} from "expo-router";
+import {service} from "@/utils/service";
+import {setUserData, setToken} from "@/utils/userdata";
 
 const SignIn = () => {
   const [form, setForm] = useState({
@@ -18,25 +18,23 @@ const SignIn = () => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const submit=async (e)=> {
-    e.preventDefault();
+  const submit = async () => {
     if (!form.username || !form.password) {
-      return setErrorMessage("All fields are required .");
+      return setErrorMessage("All fields are required.");
     }
     setLoading(true);
     try {
       const response = await service.post("/user/login", form);
-      console.log("response data-->",response);
+      console.log("response data-->", response);
       if (!response.success) {
-         setErrorMessage(response.message);
-         return;
+        setErrorMessage(response.message);
+        return;
+      } else {
+        const token = response.data;
+        await setToken(token);
+        setRequest(token);
+        setErrorMessage(null);
       }
-      else{
-      const token = response.data;
-      await setToken(token);
-      setRequest(token);
-      setErrorMessage(null);
-      }``
       console.log("success")
     } catch (error) {
       setErrorMessage(error.message || "Login Error");
@@ -50,7 +48,7 @@ const SignIn = () => {
       const response = await service.get("/user/me");
       console.log(response);
       if (response.success) {
-        const { data } = response;
+        const {data} = response;
         await setUserData(data);
         if (!data.firstLogin) {
           router.replace("(tabs)");
@@ -64,7 +62,7 @@ const SignIn = () => {
   }, [request]);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{flex: 1}}>
       <ScrollView
         className="bg-primary h-full pt-[25%] w-full"
         contentContainerStyle={{
@@ -87,21 +85,21 @@ const SignIn = () => {
               type="Username"
               icon={icons.user}
               value={form.username}
-              handleChangeText={(e) => setForm({ ...form, username: e })}
+              handleChangeText={(e) => setForm({...form, username: e})}
               placeholder="Username"
             />
             <FormField
               type="Password"
               icon={icons.password}
               value={form.password}
-              handleChangeText={(e) => setForm({ ...form, password: e })}
+              handleChangeText={(e) => setForm({...form, password: e})}
               placeholder="Password"
             />
           </View>
         </View>
+          {errorMessage && <Text className="text-red-500 text-xl">{errorMessage}</Text>}
         <View className="my-12">
-          <SubmitButton handlePress={submit} isLoading={loading} />
-          {errorMessage && <Text className="text-red-500 text-xl">{errorMessage}</Text>} 
+          <SubmitButton handlePress={submit} isLoading={loading}/>
         </View>
       </ScrollView>
     </SafeAreaView>
