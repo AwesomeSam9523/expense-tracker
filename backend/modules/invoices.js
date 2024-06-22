@@ -202,5 +202,27 @@ router.get('/event/:eventId', async (req, res) => {
   }
 });
 
+router.post('/mine', async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({success: false, message: 'Unauthorized'});
+    }
+
+    const data = await pool.query('SELECT id, "fileUrl", amount, "createdAt", "createdBy", accepted, "actionedBy", "actionedAt", "eventId" FROM "public"."invoices" WHERE "createdBy" = $1', [req.user.id]);
+
+    if (data.rowCount === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'No invoices found for this user',
+      });
+    }
+
+    res.status(200).json({success: true, data: data.rows});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({success: false, message: 'Internal Server Error'});
+  }
+});
+
 // Use the router
 export default router;
