@@ -175,12 +175,12 @@ router.get('/event/:eventId', async (req, res) => {
     let queryParams;
 
     if (req.user.role === 'EC') {
-      // EC can access all invoices for the entered eventid 
-      query = 'SELECT id, fileUrl, amount, createdAt, createdBy, accepted, actionBy, actiondAt, eventId FROM "public"."invoices" WHERE "eventId" = $1';
+      // EC can access all invoices for the entered eventid
+      query = 'SELECT id, "fileUrl", amount, "createdAt", "createdBy", accepted, "actionedBy", "actionedAt", "eventId" FROM "public"."invoices" WHERE "eventId" = $1';
       queryParams = [eventId];
     } else if (req.user.role === 'JC' || req.user.role === 'CC') {
-      // JC or CC can access only their invoices for the entered eventid 
-      query = 'SELECT id, fileUrl, amount, createdAt, createdBy, accepted, actionBy, actiondAt, eventId FROM "public"."invoices" WHERE "eventId" = $1 AND "createdBy" = $2';
+      // JC or CC can access only their invoices for the entered eventid
+      query = 'SELECT id, "fileUrl", amount, "createdAt", "createdBy", accepted, "actionedBy", "actionedAt", "eventId" FROM "public"."invoices" WHERE "eventId" = $1 AND "createdBy" = $2';
       queryParams = [eventId, req.user.id];
     } else {
       return res.status(403).json({success: false, message: 'Insufficient Permissions'});
