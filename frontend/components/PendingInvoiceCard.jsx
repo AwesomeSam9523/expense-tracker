@@ -6,7 +6,7 @@ import {useEffect, useState} from "react";
 import {getToken} from "../utils/userdata";
 
 export function PendingInvoiceCard({invoice, onAction}) {
-  const {amount, eventId, eventName, fileUrl, id, name, pfp, username, role} = invoice;
+  const {amount, eventName, fileUrl, id, name, pfp, role} = invoice;
   const [token, setToken] = useState('');
 
   async function handleAction(action) {
