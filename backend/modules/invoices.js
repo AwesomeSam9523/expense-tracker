@@ -90,7 +90,6 @@ router.get('/pending', async (req, res) => {
       eventId: row.eventId,
     }));
 
-    // Respond with success and list of pending invoices
     res.status(200).json({success: true, data: pendingInvoices});
   } catch (error) {
     console.error(error);
@@ -106,7 +105,22 @@ router.get('/event/:eventId', async (req, res) => {
     }
 
     const { eventId } = req.params;
-    const rows = await pool.query('SELECT * FROM "public"."invoices" WHERE "eventId" = $1', [eventId]);
+    let query;
+    let queryParams;
+
+    if (req.user.role === 'EC') {
+      // EC can access all invoices for the entered eventid 
+      query = 'SELECT id, fileUrl, amount, createdAt, createdBy, accepted, actionBy, actiondAt, eventId FROM "public"."invoices" WHERE "eventId" = $1';
+      queryParams = [eventId];
+    } else if (req.user.role === 'JC' || req.user.role === 'CC') {
+      // JC or CC can access only their invoices for the entered eventid 
+      query = 'SELECT id, fileUrl, amount, createdAt, createdBy, accepted, actionBy, actiondAt, eventId FROM "public"."invoices" WHERE "eventId" = $1 AND "createdBy" = $2';
+      queryParams = [eventId, req.user.id];
+    } else {
+      return res.status(403).json({success: false, message: 'Insufficient Permissions'});
+    }
+
+    const rows = await pool.query(query, queryParams);
 
     if (rows.rowCount === 0) {
       return res.status(404).json({
@@ -115,20 +129,7 @@ router.get('/event/:eventId', async (req, res) => {
       });
     }
 
-    const invoices = rows.rows.map(row => ({
-      id: row.id,
-      fileUrl: row.fileUrl,
-      amount: row.amount,
-      createdAt: row.createdAt,
-      createdBy: row.createdBy,
-      accepted: row.accepted,
-      actionBy: row.actionBy,
-      actiondAt: row.actiondAt,
-      eventId: row.eventId,
-    }));
-
-    // Respond with success and invoice
-    res.status(200).json({success: true, data: invoices});
+    res.status(200).json({success: true, data: rows.rows});
   } catch (error) {
     console.error(error);
     res.status(500).json({success: false, message: 'Internal Server Error'});
