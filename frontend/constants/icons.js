@@ -24,8 +24,12 @@ import checked from "../assets/icons/checked.png"
 import unchecked from "../assets/icons/unchecked.png"
 import buttonIcon from "../assets/icons/button-icon.png"
 import userIcon from "../assets/icons/user.png"
-
-
+import deleteIcon from "../assets/icons/delete.png"
+import userPassword from "../assets/icons/password.png"
+import cross from "../assets/icons/cross.png"
+import correct from "../assets/icons/correct.png"
+import designation from "../assets/icons/designation.png"
+import id from "../assets/icons/id.png"
 export default {
   budget,
   cs,
@@ -53,4 +57,10 @@ export default {
   unchecked,
   buttonIcon,
   userIcon,
+  deleteIcon,
+  userPassword,
+  cross,
+  correct,
+  designation,
+  id
 }

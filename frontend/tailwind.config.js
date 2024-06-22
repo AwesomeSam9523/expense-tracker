@@ -11,7 +11,12 @@ module.exports = {
         gray : "#8A8A8A",
         darkgray: "#262626",
         lightgray: "#9A9393",
-        textgray: "#A6A6A6"
+        textgray: "#A6A6A6",
+        ECcolor: "#ff4c4c",
+        CCcolor: "#f1d72e",
+        JCcolor: "#68ff61",
+        notifUnread : "rgba(249,163,26,0.25)",
+        fadered: "#490011",
       },
       fontFamily : {
         bextrabold : ["Barlow-ExtraBold", "sans-sarif"],

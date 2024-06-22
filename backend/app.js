@@ -1,11 +1,12 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import path from "path";
 
 import getUser from './utils/login.js';
 import userManager from './modules/users.js';
 import eventManager from './modules/events.js';
 import invoiceManager from './modules/invoices.js';
-import path from "path";
+import notificationsManager from "./modules/notifications.js";
 
 const app = express();
 
@@ -27,7 +28,7 @@ app.use((req, res, next) => {
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(async (req, res, next) => {
-  if (!req.headers.authorization)
+  if (!req.headers.authorization && req.path !== '/user/login')
     return res.sendStatus(401);
 
   const token = req.headers.authorization.split(' ')[1];
@@ -41,6 +42,7 @@ app.use(async (req, res, next) => {
 app.use('/user', userManager);
 app.use('/event', eventManager);
 app.use('/invoice', invoiceManager);
+app.use('/notification', notificationsManager);
 
 app.get('/', (req, res) => {
   res.send('Hello World!');

@@ -53,6 +53,7 @@ const CreateEvent = () => {
 
   async function submit() {
     const response = await service.post("/event/new", event);
+    console.debug(response);
     if (response.success) {
       router.back();
     }
@@ -110,14 +111,14 @@ const CreateEvent = () => {
                 </TouchableOpacity>
               </View>
             </View>
-            {image && (
+            {image ? (
               <View className="mt-4">
                 <Image
                   source={{ uri: image }}
                   style={{ width: 100, height: 100, borderRadius: 10 }}
                 />
               </View>
-            )}
+            ) : null}
           </View>
 
           <View className="my-2 w-full bg-darkgray border-1  p-3 h-40  rounded-3xl items-center flex-row">
@@ -143,7 +144,7 @@ const CreateEvent = () => {
               Accepting Invoices
             </Text>
             <View className="pb-5">
-              <ToggleSwitch handleToggle={handleToggle} toggle={!toggle} />
+              <ToggleSwitch handleToggle={handleToggle} toggle={toggle} />
             </View>
           </View>
           <View className="my-6">
