@@ -175,15 +175,21 @@ router.get('/event/:eventId', async (req, res) => {
     let queryParams;
 
     if (req.user.role === 'EC') {
-      // EC can access all invoices for the entered eventid
-      query = 'SELECT id, "fileUrl", amount, "createdAt", "createdBy", accepted, "actionedBy", "actionedAt", "eventId" FROM "public"."invoices" WHERE "eventId" = $1';
+      query = `
+      SELECT invoices."id", "fileUrl", amount, invoices."createdAt", invoices."createdBy", accepted, "actionedBy", 
+             "actionedAt", "eventId", u."name", u."pfp", u."role"
+      FROM "public"."invoices" 
+      INNER JOIN public.users u on u.id = invoices."createdBy"
+      WHERE "eventId" = $1`;
       queryParams = [eventId];
-    } else if (req.user.role === 'JC' || req.user.role === 'CC') {
-      // JC or CC can access only their invoices for the entered eventid
-      query = 'SELECT id, "fileUrl", amount, "createdAt", "createdBy", accepted, "actionedBy", "actionedAt", "eventId" FROM "public"."invoices" WHERE "eventId" = $1 AND "createdBy" = $2';
-      queryParams = [eventId, req.user.id];
     } else {
-      return res.status(403).json({success: false, message: 'Insufficient Permissions'});
+      query = `
+        SELECT invoices."id", "fileUrl", amount, invoices."createdAt", invoices."createdBy", accepted, "actionedBy",
+               "actionedAt", "eventId", u."name", u."pfp", u."role"
+        FROM "public"."invoices"
+        INNER JOIN public.users u on u.id = invoices."createdBy"
+        WHERE "eventId" = $1 AND invoices."createdBy" = $2`;
+      queryParams = [eventId, req.user.id];
     }
 
     const rows = await pool.query(query, queryParams);
