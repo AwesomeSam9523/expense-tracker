@@ -130,6 +130,7 @@ router.post('/accept', async (req, res) => {
     }
 
     await pool.query('UPDATE "public"."invoices" SET accepted = true, "actionedBy" = $1, "actionedAt" = $2 WHERE id = $3', [req.user.id, new Date(), invoice.id]);
+    await pool.query('UPDATE "public"."events" SET "expenditure" = "expenditure" + $1 WHERE id = $2', [invoice.amount, invoice.eventId]);
     await createNotification(
       req.user.id,
       `Your invoice #${invoice.shortId} for ${invoice.eventName} of amount Rs. ${invoice.amount} has been accepted!`,
