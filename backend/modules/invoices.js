@@ -98,7 +98,7 @@ async function getInvoice(req, res) {
   }
 
   const data = await pool.query(`
-    SELECT "invoices"."id", "shortId", "accepted", e."name" as "eventName", "amount" FROM "public"."invoices" 
+    SELECT "invoices"."id", "shortId", "accepted", e."name" as "eventName", "amount", e."id" as "eventId" FROM "public"."invoices" 
     INNER JOIN public.events e on e.id = invoices."eventId"
     WHERE "invoices"."id" = $1
   `, [id]);
