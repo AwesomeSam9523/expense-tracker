@@ -18,6 +18,16 @@ router.post('/new', async (req, res) => {
       return res.status(400).json({success: false, message: 'Amount, eventId, image and mimeType are required'});
     }
 
+    const event = await pool.query('SELECT id, closed FROM "public"."events" WHERE id = $1', [eventId]);
+    if (event.rowCount === 0) {
+      return res.status(404).json({success: false, message: 'Event not found'});
+    }
+
+    if (event.rows[0].closed) {
+      return res.status(400).json({success: false, message: 'Event is closed'});
+    }
+
+
     const fileExtension = mimeType.split('/')[1];
     const id = uuidv4();
     try {
