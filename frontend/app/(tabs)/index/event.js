@@ -7,6 +7,7 @@ import icons from "../../../constants/icons";
 import {getToken, getUserData} from "../../../utils/userdata";
 import ToggleSwitch from "../../../components/ToggleSwitch";
 import InvoiceCard from "../../../components/InvoiceCard";
+import AddButton from "../../../components/AddButton";
 
 const ButtonComponent = ({text, icon, onPress, active, extraPadding=false}) => {
   return (
@@ -167,14 +168,16 @@ function Event() {
             </View> : null}
           </View>
           :
-          <View className="w-[90%]">
+          <View className="w-full flex items-center">
             <FlatList
+              className="flex flex-grow h-[55%] w-[90%]"
               data={invoices}
               renderItem={({item}) => <InvoiceCard invoice={item} />}
               refreshControl={
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
               }
             />
+            <AddButton text={"Add invoice"} route={`create-invoice?eventId=${data.id}`} />
           </View>
         }
 

@@ -44,7 +44,7 @@ const CreateEvent = () => {
 
   const [event, setEvent] = useState({
     name: "",
-    budget: null,
+    budget: 0,
     description: "",
     acceptingInvoice: toggle,
     image: image,
@@ -93,8 +93,9 @@ const CreateEvent = () => {
           <EventForm
             icon={icons.budget}
             value={event.budget}
-            handleChangeText={(e) => setEvent({ ...event, budget: e })}
+            handleChangeText={(e) => setEvent({ ...event, budget: parseInt(e) })}
             placeholder="Event budget"
+            inputMode="numeric"
           />
           <View className={`my-2 bg-darkgray border-1 focus:border-white p-3 w-full  ${image ? "rounded-xl" : "rounded-full"}`}>
             <View className="items-center flex-row">
