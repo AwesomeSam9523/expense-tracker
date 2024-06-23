@@ -203,16 +203,8 @@ router.get('/event/:eventId', async (req, res) => {
       queryParams = [eventId, req.user.id];
     }
 
-    const rows = await pool.query(query, queryParams);
-
-    if (rows.rowCount === 0) {
-      return res.status(404).json({
-        success: false,
-        message: 'No invoices found for this eventId',
-      });
-    }
-
-    res.status(200).json({success: true, data: rows.rows});
+    const data = await pool.query(query, queryParams);
+    res.status(200).json({success: true, data: data.rows});
   } catch (error) {
     console.error(error);
     res.status(500).json({success: false, message: 'Internal Server Error'});

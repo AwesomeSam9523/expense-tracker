@@ -1,3 +1,4 @@
+import Toast from 'react-native-toast-message';
 import {getToken} from "@/utils/userdata.ts";
 
 // const BASE_URL = 'http://192.168.1.8:3000';
@@ -16,7 +17,16 @@ const get = async (url: string) => {
   });
 
   console.debug('GET response to', url, ':', response.status)
-  return response.json();
+  const json = await response.json();
+
+  if (json.message) {
+    Toast.show({
+      type: response.status === 200 ? 'success' : 'error',
+      text1: json.message,
+    });
+  }
+
+  return json;
 };
 
 const post = async (url: string, data: any, headers = {}) => {
@@ -33,7 +43,16 @@ const post = async (url: string, data: any, headers = {}) => {
   });
 
   console.debug('POST response to', url, 'with payload', data, ':', response.status)
-  return response.json();
+  const json = await response.json();
+
+  if (json.message) {
+    Toast.show({
+      type: [200, 201].includes(response.status) ? 'success' : 'error',
+      text1: json.message,
+    });
+  }
+
+  return json;
 };
 
 class Service {
