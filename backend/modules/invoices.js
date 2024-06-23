@@ -18,6 +18,16 @@ router.post('/new', async (req, res) => {
       return res.status(400).json({success: false, message: 'Amount, eventId, image and mimeType are required'});
     }
 
+    const event = await pool.query('SELECT id, closed FROM "public"."events" WHERE id = $1', [eventId]);
+    if (event.rowCount === 0) {
+      return res.status(404).json({success: false, message: 'Event not found'});
+    }
+
+    if (event.rows[0].closed) {
+      return res.status(400).json({success: false, message: 'Event is closed'});
+    }
+
+
     const fileExtension = mimeType.split('/')[1];
     const id = uuidv4();
     try {
@@ -98,7 +108,7 @@ async function getInvoice(req, res) {
   }
 
   const data = await pool.query(`
-    SELECT "invoices"."id", "shortId", "accepted", e."name" as "eventName", "amount" FROM "public"."invoices" 
+    SELECT "invoices"."id", "shortId", "accepted", e."name" as "eventName", "amount", e."id" as "eventId" FROM "public"."invoices" 
     INNER JOIN public.events e on e.id = invoices."eventId"
     WHERE "invoices"."id" = $1
   `, [id]);
@@ -130,6 +140,7 @@ router.post('/accept', async (req, res) => {
     }
 
     await pool.query('UPDATE "public"."invoices" SET accepted = true, "actionedBy" = $1, "actionedAt" = $2 WHERE id = $3', [req.user.id, new Date(), invoice.id]);
+    await pool.query('UPDATE "public"."events" SET "expenditure" = "expenditure" + $1 WHERE id = $2', [invoice.amount, invoice.eventId]);
     await createNotification(
       req.user.id,
       `Your invoice #${invoice.shortId} for ${invoice.eventName} of amount Rs. ${invoice.amount} has been accepted!`,
@@ -157,6 +168,73 @@ router.post('/reject', async (req, res) => {
       'failure'
     );
     res.status(200).json({success: true, message: 'Invoice rejected!'});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({success: false, message: 'Internal Server Error'});
+  }
+});
+
+// Route to get all invoices by eventId
+router.get('/event/:eventId', async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({success: false, message: 'Unauthorized'});
+    }
+
+    const { eventId } = req.params;
+    let query;
+    let queryParams;
+
+    if (req.user.role === 'EC') {
+      query = `
+      SELECT invoices."id", "fileUrl", amount, invoices."createdAt", invoices."createdBy", accepted, "actionedBy", 
+             "actionedAt", "eventId", u."name", u."pfp", u."role"
+      FROM "public"."invoices" 
+      INNER JOIN public.users u on u.id = invoices."createdBy"
+      WHERE "eventId" = $1`;
+      queryParams = [eventId];
+    } else {
+      query = `
+        SELECT invoices."id", "fileUrl", amount, invoices."createdAt", invoices."createdBy", accepted, "actionedBy",
+               "actionedAt", "eventId", u."name", u."pfp", u."role"
+        FROM "public"."invoices"
+        INNER JOIN public.users u on u.id = invoices."createdBy"
+        WHERE "eventId" = $1 AND invoices."createdBy" = $2`;
+      queryParams = [eventId, req.user.id];
+    }
+
+    const rows = await pool.query(query, queryParams);
+
+    if (rows.rowCount === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'No invoices found for this eventId',
+      });
+    }
+
+    res.status(200).json({success: true, data: rows.rows});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({success: false, message: 'Internal Server Error'});
+  }
+});
+
+router.post('/mine', async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({success: false, message: 'Unauthorized'});
+    }
+
+    const data = await pool.query('SELECT id, "fileUrl", amount, "createdAt", "createdBy", accepted, "actionedBy", "actionedAt", "eventId" FROM "public"."invoices" WHERE "createdBy" = $1', [req.user.id]);
+
+    if (data.rowCount === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'No invoices found for this user',
+      });
+    }
+
+    res.status(200).json({success: true, data: data.rows});
   } catch (error) {
     console.error(error);
     res.status(500).json({success: false, message: 'Internal Server Error'});

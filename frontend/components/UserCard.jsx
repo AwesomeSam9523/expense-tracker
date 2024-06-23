@@ -1,20 +1,82 @@
-import {View, Image, Text, TouchableOpacity} from "react-native";
+import {View, Image, Text, TouchableOpacity, Alert} from "react-native";
 import icons from "../constants/icons";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import ToggleSwitch from "./ToggleSwitch";
 import {service} from "../utils/service";
-const token = '326490a0-9fc0-4ca3-a8bc-ac22dde0b710';
+import {getToken, getUserData} from "../utils/userdata";
 
 export function UserCard({user}) {
   const {name, pfp, role, enabled, username, id} = user;
+  const [token, setToken] = useState('');
+  const [userData, setUserData] = useState({});
   const [isEnabled, setIsEnabled] = useState(enabled);
-  async function handleToggle() {
 
-    // Call API to update user status
+  async function handleToggle() {
     const res = await service.post(`/user/${isEnabled ? 'disable' : 'enable'}`, { id })
     if (res.success) {
       setIsEnabled(!isEnabled);
     }
+  }
+
+  async function resetPassword() {
+    Alert.alert(
+      'Reset Password',
+      `Are you sure you want to reset the password for ${name}?`,
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel'
+        },
+        {
+          text: 'Reset', onPress: async () => {
+            const res = await service.post(`/user/resetPassword`, { username })
+            if (res.success) {
+              alert('Password reset successful');
+            }
+          }
+        }
+      ]
+    );
+  }
+
+  async function deleteUser() {
+    Alert.alert(
+      'Delete User',
+      `Are you sure you want to delete ${name}?`,
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel'
+        },
+        {
+          text: 'Delete', onPress: async () => {
+            const res = await service.post(`/user/delete`, { id })
+            if (res.success) {
+              alert('User deleted successfully');
+            }
+          }
+        }
+      ]
+    );
+  }
+
+  useEffect(() => {
+    getToken().then(setToken);
+    getUserData().then(setUserData);
+  }, []);
+
+  function checkIfDisallowed() {
+    if (role === 'EC') {
+      return false;
+    }
+
+    if (userData.role === 'CC' && role !== 'JC') {
+      return false;
+    }
+
+    return true;
   }
 
   return (
@@ -33,21 +95,24 @@ export function UserCard({user}) {
         </View>
       </View>
 
-      <View className="flex flex-row items-center gap-1.5">
-        <TouchableOpacity>
-          <ToggleSwitch toggle={isEnabled} handleToggle={handleToggle} size={"small"} />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <View className="bg-secondary p-1 rounded-full">
-            <Image source={icons.userPassword} className="w-5 h-5 m-1" resizeMode="contain" />
+      {checkIfDisallowed() ?
+        <View className="flex flex-row items-center gap-1.5">
+          <View>
+            <ToggleSwitch toggle={isEnabled} handleToggle={handleToggle} size={"small"} />
           </View>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <View className="bg-[#490011] p-1 rounded-full">
-            <Image source={icons.deleteIcon} className="w-5 h-5 m-1" resizeMode="contain" />
-          </View>
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity onPress={resetPassword}>
+            <View className="bg-secondary p-1 rounded-full">
+              <Image source={icons.userPassword} className="w-5 h-5 m-1" resizeMode="contain" />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={deleteUser}>
+            <View className="bg-fadered p-1 rounded-full">
+              <Image source={icons.deleteIcon} className="w-5 h-5 m-1" resizeMode="contain" />
+            </View>
+          </TouchableOpacity>
+        </View>
+        : null
+      }
     </View>
   )
 }

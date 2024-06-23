@@ -9,12 +9,11 @@ This app is tailored for IEEE CS internal budget management.
    5. [Getting a summary](#5-getting-a-summary)
 2. [Features](#features)
    1. [ECs](#ecs-are-allowed-to)
-   2. [CCs](#ccs-are-allowed-to)
-   3. [JCs](#jcs-are-allowed-to)
+   2. [CCs and JCs](#ccs-and-jcs-are-allowed-to)
 3. [Stack used](#stack-used)
    1. [Frontend](#frontend)
    2. [Backend](#backend)
-4. [Contributors](#contributors)
+
 
 ## App flow
 
@@ -41,43 +40,35 @@ and by whom are easily available.
 
 ## Features
 
-### ECs are allowed to:
-- Create events
-- Allocate budget
-- Add and verify invoices
+### CCs and JCs are allowed to:
 - Check stats
-- Create new CC/JC user
-- Enable/Disable a CC or JC token
-
-### CCs are allowed to:
-- Add and verify invoices
-- Check stats
-- Create new JC user
-- Enable/Disable a JC token
-
-### JCs are allowed to:
 - Add invoices
+- View their own invoices
+- Change their password
+- Update their profile picture
+- View all events
+- View notifications
+
+### ECs are allowed to:
+
+Everything that CC and JC can do, plus:
+- Create/edit/delete events
+- Allocate budget
+- Approve/reject invoices
+- Create/delete new CC or JC user
+- Enable/disable a CC or JC token
+
 
 
 ## Stack used
 
 ### Frontend
-- ReactJS
-- SCSS
+- React Native
+- NativeWind
 
 ### Backend
 - NodeJS (Express)
 - PostgreSQL
 
-
-## Contributors
-
-This is an internal team project of IEEE CS made by-
-1. Samaksh Gupta
-2. Sneha Agarwal
-3. Tamanna Yadav
-4. Aditya Agarwal
-5. Disha Jain
-
-
+\
 Made with ❤️ by IEEECS

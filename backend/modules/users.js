@@ -168,6 +168,10 @@ async function checkSufficientPermissions(req, res) {
       return false;
     }
 
+    if (user.role === 'EC') {
+      res.status(403).json({success: false, message: 'An EC cannot be enabled/disabled via app.'});
+    }
+
     return true;
   } catch (e) {
     console.error(e);
@@ -250,6 +254,75 @@ router.post('/changePassword', async (req, res) => {
     );
 
     res.status(201).json({success: true, message: 'Password changed', data: newToken});
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({success: false, message: 'Internal Server Error'});
+  }
+});
+
+router.post('/resetPassword', async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({success: false, message: 'Unauthorized'});
+    }
+
+    if (req.user.role !== 'EC') {
+      return res.status(403).json({success: false, message: 'Insufficient Permissions'});
+    }
+
+    const { username } = req.body;
+
+    if (!username) {
+      return res.status(400).json({success: false, message: 'Username is required'});
+    }
+
+    const data = await pool.query('SELECT "role" FROM "public"."users" WHERE "username" = $1', [username]);
+    if (data.rowCount === 0) {
+      return res.status(404).json({success: false, message: 'User not found'});
+    }
+
+    const user = data.rows[0];
+    if (user.role === 'EC') {
+      return res.status(403).json({success: false, message: 'Cannot reset password of an EC via app.'});
+    }
+
+    const newPasswordHash = hashPassword(username);
+    await pool.query(
+      'UPDATE "public"."users" SET "password" = $1, "firstLogin" = true WHERE "username" = $2',
+      [newPasswordHash, username]
+    );
+
+    res.status(201).json({success: true, message: 'Password reset'});
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({success: false, message: 'Internal Server Error'});
+  }
+});
+
+router.post('/delete', async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({success: false, message: 'Unauthorized'});
+    }
+
+    if (req.user.role !== 'EC') {
+      return res.status(403).json({success: false, message: 'Insufficient Permissions'});
+    }
+
+    const { id } = req.body;
+    const data = await pool.query('SELECT "role" FROM "public"."users" WHERE "id" = $1', [id]);
+    if (data.rowCount === 0) {
+      return res.status(404).json({success: false, message: 'User not found'});
+    }
+
+    const user = data.rows[0];
+    if (user.role === 'EC') {
+      return res.status(403).json({success: false, message: 'Cannot delete an EC via app.'});
+    }
+
+    await pool.query('DELETE FROM "public"."users" WHERE "id" = $1', [id]);
+
+    res.status(201).json({success: true, message: 'User deleted'});
   } catch (e) {
     console.error(e);
     res.status(500).json({success: false, message: 'Internal Server Error'});

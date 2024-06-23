@@ -2,7 +2,7 @@ import { View, Image, Text, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
-import { getUserData } from "../utils/userdata";
+import {getUserData, setToken} from "../utils/userdata";
 import { router } from "expo-router";
 import ProfileButton from "../components/ProfileButton";
 import icons from "../constants/icons";
@@ -16,6 +16,11 @@ const Profile = () => {
     });
   }, []);
 
+  const logout = async () => {
+    await setUserData({});
+    await setToken('');
+    router.replace("/");
+  }
   return (
     <SafeAreaView className="flex-1">
       <View className="flex justify-start bg-primary w-full h-full">
@@ -59,7 +64,7 @@ const Profile = () => {
               value="Change Password"
             />
             <ProfileButton icon={icons.invoice} value="My Invoices" />
-            <ProfileButton icon={icons.logOut} value="Logout" />
+            <ProfileButton icon={icons.logOut} value="Logout" handlePress={logout}/>
           </View>
         </View>
       </View>

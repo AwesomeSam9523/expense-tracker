@@ -1,12 +1,14 @@
 import {View, Image, Text, TouchableOpacity} from "react-native";
 import icons from "../constants/icons";
+import {router} from "expo-router";
 const token = '326490a0-9fc0-4ca3-a8bc-ac22dde0b710';
 
 function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-export function EventCard({name, image, budget}) {
+export function EventCard({event}) {
+  const {id, name, image, budget} = event;
   return (
     <View className="flex flex-col w-full h-40 mb-4">
       <Image source={{
@@ -19,7 +21,7 @@ export function EventCard({name, image, budget}) {
         <Text className="text-xl font-bold color-white pt-1">Rs {numberWithCommas(budget)}/-</Text>
       </View>
       <View className="absolute bg-[#262626] rounded-full bottom-2 right-2 p-2 z-10">
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => {router.push('/event?eventId=' + id)}}>
           <Image source={icons.rightArrow} className="w-8 h-8" resizeMode="contain"/>
         </TouchableOpacity>
       </View>

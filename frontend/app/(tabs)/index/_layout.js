@@ -4,8 +4,10 @@ import { Stack } from 'expo-router'
 const _layout = () => {
   return (
     <Stack>
-        <Stack.Screen name='home' options={{headerShown:false}} />
-        <Stack.Screen name='create-event' options={{headerShown:false}} />
+      <Stack.Screen name='home' options={{headerShown:false}} />
+      <Stack.Screen name='create-event' options={{headerShown:false}} />
+      <Stack.Screen name='event' options={{headerShown:false}} />
+      <Stack.Screen name='create-invoice' options={{headerShown:false}} />
     </Stack>
   )
 }
