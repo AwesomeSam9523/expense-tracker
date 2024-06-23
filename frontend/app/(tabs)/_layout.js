@@ -1,12 +1,12 @@
 import { Image, StatusBar, View } from "react-native";
 import React from "react";
-import { Tabs } from 'expo-router';
+import { Tabs } from "expo-router";
 import icons from "../../constants/icons"; // Ensure this path is correct
-
+import { Stack } from 'expo-router'
 const TabBarIcon = ({ icon, focused }) => (
   <View
     style={{
-      backgroundColor: focused ? '#f5b301' : 'transparent',
+      backgroundColor: focused ? "#f5b301" : "transparent",
       borderRadius: 30,
       padding: 15,
     }}
@@ -16,8 +16,8 @@ const TabBarIcon = ({ icon, focused }) => (
       style={{
         width: 24,
         height: 24,
-        tintColor: focused ? '#262626' : '#ffffff',
-        resizeMode: 'contain', // Added resizeMode to contain the icon
+        tintColor: focused ? "#262626" : "#ffffff",
+        resizeMode: "contain", // Added resizeMode to contain the icon
       }}
     />
   </View>
@@ -33,27 +33,40 @@ const routeIcons = {
 export default function TabLayout() {
   return (
     <>
+      
       <Tabs
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused }) => {
-            return <TabBarIcon icon={routeIcons[route.name]} focused={focused} />;
+            return (
+              <TabBarIcon icon={routeIcons[route.name]} focused={focused} />
+            );
           },
-          tabBarActiveTintColor: '#f5b301',
-          tabBarInactiveTintColor: '#ffffff',
+          tabBarActiveTintColor: "#f5b301",
+          tabBarInactiveTintColor: "#ffffff",
           tabBarStyle: {
-            backgroundColor: '#262626',
+            backgroundColor: "#262626",
             paddingBottom: 5,
             height: 80,
-            paddingHorizontal: 20
+            paddingHorizontal: 20,
           },
           tabBarShowLabel: false,
           headerShown: false,
         })}
       >
-        <Tabs.Screen name="index" options={{ tabBarLabel: 'Home' }} />
-        <Tabs.Screen name="userManagement" options={{ tabBarLabel: 'Manage Users' }} />
-        <Tabs.Screen name="pendingInvoice" options={{ tabBarLabel: 'Pending Invoices' }} />
-        <Tabs.Screen name="notifications" options={{ tabBarLabel: 'Notifications' }} />
+        <Tabs.Screen name="index" options={{ tabBarLabel: "Home" }} />
+        <Tabs.Screen
+          name="userManagement"
+          options={{ tabBarLabel: "Manage Users" }}
+        />
+        <Tabs.Screen
+          name="pendingInvoice"
+          options={{ tabBarLabel: "Pending Invoices" }}
+        />
+        <Tabs.Screen
+          name="notifications"
+          options={{ tabBarLabel: "Notifications" }}
+        />
+        
       </Tabs>
       <StatusBar backgroundColor="#151515" />
     </>

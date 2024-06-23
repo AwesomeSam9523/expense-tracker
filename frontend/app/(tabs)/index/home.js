@@ -14,12 +14,20 @@ import { EventCard } from "../../../components/EventCard";
 import SearchBar from "../../../components/SearchBar";
 import AddButton from "../../../components/AddButton";
 import TopHeader from "../../../components/TopHeader";
+import { getUserData } from "../../../utils/userdata";
+import { render } from "react-native-web";
 
 function Index() {
+  const [userData, setUserData] = useState([])
   const [events, setEvents] = useState([]);
   const [searchPhrase, setSearchPhrase] = useState("");
   const [refreshing, setRefreshing] = React.useState(false);
 
+  useEffect(()=>{
+    getUserData().then((data)=>{
+      setUserData(data)
+    })
+  },[])
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
   }, []);
@@ -30,6 +38,9 @@ function Index() {
       setRefreshing(false);
     });
   }, [searchPhrase, refreshing]);
+
+  
+
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -68,8 +79,7 @@ function Index() {
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
         />
-
-        <AddButton text={"Add new event"} route={"create-event"} />
+        <AddButton text={"Add new event"} route={"create-event"} /> 
       </View>
     </SafeAreaView>
   );

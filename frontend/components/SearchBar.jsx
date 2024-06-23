@@ -26,7 +26,7 @@ const SearchBar = ({ setSearchPhrase, placeholder }) => {
 
           <Image source={icons.search} className="w-8 h-8" resizeMode="contain" />
           <TextInput
-            className="flex-1 px-3 text-primary text-xlg"
+            className="flex-1 px-3 text-gray text-lg "
 
             placeholder={placeholder}
             placeholderTextColor="#9A9393"

@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import EventForm from "../../../components/EventForm";
 import icons from "../../../constants/icons";
@@ -16,9 +16,13 @@ import ToggleSwitch from "../../../components/ToggleSwitch";
 import SubmitButton from "../../../components/SubmitButton";
 import {service} from "../../../utils/service";
 
+
 const CreateEvent = () => {
+
+
   const [image, setImage] = useState(null);
   const [toggle, setToggle] = useState(true);
+
 
   const handleToggle = () => {
     setToggle(!toggle);
@@ -67,6 +71,7 @@ const CreateEvent = () => {
             onPress={() => {
               router.back();
             }}
+          
           >
             <View className="bg-darkgray p-2 rounded-full">
               <Image

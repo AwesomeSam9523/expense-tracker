@@ -30,6 +30,7 @@ import cross from "../assets/icons/cross.png"
 import correct from "../assets/icons/correct.png"
 import designation from "../assets/icons/designation.png"
 import id from "../assets/icons/id.png"
+
 export default {
   budget,
   cs,
