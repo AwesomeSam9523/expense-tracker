@@ -10,6 +10,7 @@ const NotificationCard = ({invoiceData}) => {
   const [read, setRead] = useState(invoiceData.read);
 
   async function handleRead() {
+    if (read) return;
     const response = await service.post('/notification/read', {id});
     console.log(response.data);
     if (response.success) {
