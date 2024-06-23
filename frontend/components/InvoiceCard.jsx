@@ -5,16 +5,23 @@ import { getToken } from '../utils/userdata';
 import { router } from 'expo-router';
 
 export function InvoiceCard({ invoice }) {
-  const { amount, name, fileUrl, role, pfp, status} = invoice;
-  const [currentStatus, setCurrentStatus] = useState(status);
+  const { amount, name, fileUrl, role, pfp, accepted } = invoice;
+  let status;
+  switch (accepted) {
+    case true:
+      status = 'ACCEPTED';
+      break;
+    case false:
+      status = 'REJECTED';
+      break;
+    default:
+      status = 'PENDING';
+  }
   const [token, setToken] = useState('');
 
   useEffect(() => {
     getToken().then(setToken);
-
-    // Simulating real-time updates via props change
-    setCurrentStatus(status);
-  }, [status]);
+  }, []);
 
   const getStatusColorClass = (status) => {
     switch (status) {
@@ -31,7 +38,7 @@ export function InvoiceCard({ invoice }) {
 
   return (
     <TouchableOpacity onPress={() => router.push('pendingInvoice/view-invoice?fileUrl=' + fileUrl)}>
-      <View className=" flex flex-row justify-between items-center bg-darkgray p-4 rounded-lg mb-4">
+      <View className=" flex flex-row justify-between items-center bg-darkgray p-4 rounded-3xl mb-4">
         <View className=" flex flex-row items-center">
           {pfp ? <Image source={{
               uri: pfp,
@@ -42,12 +49,15 @@ export function InvoiceCard({ invoice }) {
           }
           <View>
             <Text className={`text-xl font-bold pl-4 ${role === 'EC' ? 'color-ECcolor' : (role === 'CC' ? 'color-CCcolor' : 'color-JCcolor')}`}>{name}</Text>
-            <Text className={`ml-4 text-sm ${getStatusColorClass(currentStatus)}`} >
-             {currentStatus}
-            </Text>
+            <View className="flex flex-row">
+              <Text className="ml-4 text-white">Status:</Text>
+              <Text className={`pl-2 ${getStatusColorClass(status)}`} >
+               {status}
+              </Text>
+            </View>
           </View>
         </View>
-        <Text classname="text-sm text-lg font-bold"> Rs {amount}/-</Text>
+        <Text className="text-xl text-secondary font-bold">Rs {amount}/-</Text>
       </View>
     </TouchableOpacity>
   );

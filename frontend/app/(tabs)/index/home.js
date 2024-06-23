@@ -19,7 +19,7 @@ import {getUserData} from "../../../utils/userdata";
 function Index() {
   const [events, setEvents] = useState([]);
   const [searchPhrase, setSearchPhrase] = useState("");
-  const [refreshing, setRefreshing] = React.useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [userData, setUserData] = useState({});
 
   const onRefresh = React.useCallback(() => {

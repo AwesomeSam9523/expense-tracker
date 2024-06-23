@@ -1,11 +1,12 @@
 import {SafeAreaView} from "react-native-safe-area-context";
 import {router, useLocalSearchParams} from "expo-router";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {service} from "../../../utils/service";
-import {Alert, Image, Text, TouchableOpacity, View} from "react-native";
+import {Alert, FlatList, Image, RefreshControl, Text, TouchableOpacity, View} from "react-native";
 import icons from "../../../constants/icons";
 import {getToken, getUserData} from "../../../utils/userdata";
 import ToggleSwitch from "../../../components/ToggleSwitch";
+import InvoiceCard from "../../../components/InvoiceCard";
 
 const ButtonComponent = ({text, icon, onPress, active, extraPadding=false}) => {
   return (
@@ -31,11 +32,17 @@ function numberWithCommas(x) {
 function Event() {
 
   const [data, setData] = useState({});
+  const [invoices, setInvoices] = useState([]);
   const [token, setToken] = useState('');
   const [activeTab, setActiveTab] = useState('info');
   const [toggle, setToggle] = useState(false);
   const [userData, setUserData] = useState({});
+  const [refreshing, setRefreshing] = useState(false);
   const { eventId } = useLocalSearchParams();
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+  }, []);
 
   useEffect(() => {
     service.get(`/event/${eventId}`).then((response) => {
@@ -45,7 +52,15 @@ function Event() {
       setData({...response.data, budgetLeft: response.data.budget - response.data.expenditure});
       setToggle(!data.closed);
     });
-  }, []);
+
+    service.get(`/invoice/event/${eventId}`).then((response) => {
+      if (!response.success) {
+        return;
+      }
+      setInvoices(response.data);
+      setRefreshing(false);
+    });
+  }, [refreshing]);
 
   useEffect(() => {
     getToken().then(setToken);
@@ -76,7 +91,6 @@ function Event() {
 
   async function handleToggle() {
     const res = await service.post(`/event/close`, {id: eventId, value: toggle});
-    console.log(res);
     if (res.success) {
       setToggle(!toggle);
     }
@@ -153,8 +167,14 @@ function Event() {
             </View> : null}
           </View>
           :
-          <View>
-            {/* Code for Invoices page */}
+          <View className="w-[90%]">
+            <FlatList
+              data={invoices}
+              renderItem={({item}) => <InvoiceCard invoice={item} />}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
+            />
           </View>
         }
 
