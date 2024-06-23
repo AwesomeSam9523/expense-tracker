@@ -3,6 +3,7 @@ import {SplashScreen, Stack} from 'expo-router';
 import {useFonts} from 'expo-font'
 import React, {useEffect} from 'react';
 import {StatusBar} from 'react-native';
+import Toast from 'react-native-toast-message';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -33,6 +34,7 @@ const RootLayout = () => {
         <Stack.Screen name='first-login' options={{headerShown:false}} />
         <Stack.Screen name="(tabs)" options={{headerShown: false}}/>
       </Stack>
+      <Toast visibilityTime={2000} />
     </>
   );
 }
