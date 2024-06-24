@@ -31,6 +31,7 @@ import correct from "../assets/icons/correct.png"
 import designation from "../assets/icons/designation.png"
 import id from "../assets/icons/id.png"
 import unauthorized from "../assets/icons/unauthorized.png"
+import blank from "../assets/icons/blank.png"
 
 export default {
   budget,
@@ -65,5 +66,6 @@ export default {
   correct,
   designation,
   id,
-  unauthorized
+  unauthorized,
+  blank,
 }

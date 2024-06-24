@@ -4,9 +4,10 @@ import {service} from "../utils/service";
 import {router} from "expo-router";
 import {useEffect, useState} from "react";
 import {getToken} from "../utils/userdata";
+import ProfilePicture from "./ProfilePicture";
 
 export function PendingInvoiceCard({invoice, onAction}) {
-  const {amount, eventName, fileUrl, id, name, pfp, role} = invoice;
+  const {amount, eventName, fileUrl, id, name, pfp, role, createdBy} = invoice;
   const [token, setToken] = useState('');
 
   async function handleAction(action) {
@@ -22,16 +23,10 @@ export function PendingInvoiceCard({invoice, onAction}) {
   }, []);
 
   return (
-    <TouchableOpacity onPress={() => router.push('pendingInvoice/view-invoice?fileUrl=' + fileUrl)}>
+    <TouchableOpacity onPress={() => router.navigate('pendingInvoice/view-invoice?fileUrl=' + fileUrl)}>
       <View className="flex flex-row w-full h-20 mb-4 p-2 rounded-2xl items-center justify-between bg-darkgray">
         <View className="flex flex-row items-center">
-          {pfp ? <Image source={{
-              uri: pfp,
-              method: 'GET',
-              headers: { Authorization: 'Bearer ' + token },
-            }} className="w-14 h-14 rounded-full" resizeMode="cover" />
-            : <Image source={icons.userIcon} className="w-14 h-14 rounded-full" resizeMode="contain" />
-          }
+          <ProfilePicture size={"h-14 w-14"} user={{ pfp, id: createdBy }} token={token} />
           <View>
             <Text className={`text-xl font-bold pl-4 ${role === 'EC' ? 'color-ECcolor' : (role === 'CC' ? 'color-CCcolor' : 'color-JCcolor')}`}>{name}</Text>
             <Text className="text-sm pl-4 text-white">{eventName}</Text>
