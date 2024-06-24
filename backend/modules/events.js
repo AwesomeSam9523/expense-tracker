@@ -151,9 +151,12 @@ router.get('/list', async (req, res) => {
       return res.status(401).json({success: false, message: 'Unauthorized'});
     }
 
-    const search = req.query.search || '';
+    const query = (req.user.role === 'EC')
+      ? 'SELECT id, name, budget, image, "createdAt", closed FROM "public"."events" WHERE name ILIKE $1'
+      : 'SELECT id, name, budget, image, "createdAt", closed FROM "public"."events" WHERE closed = false AND name ILIKE $1';
 
-    const data = await pool.query('SELECT id, name, budget, image, "createdAt", closed FROM "public"."events" WHERE closed = false AND name ILIKE $1', [`%${search}%`]);
+    const search = req.query.search || '';
+    const data = await pool.query(query, [`%${search}%`]);
     res.status(200).json({
       success: true,
       data: data.rows,
