@@ -2,11 +2,12 @@ import {View, Image, Text, TouchableOpacity, Alert} from "react-native";
 import icons from "../constants/icons";
 import {useEffect, useState} from "react";
 import ToggleSwitch from "./ToggleSwitch";
+import ProfilePicture from "./ProfilePicture";
 import {service} from "../utils/service";
 import {getToken, getUserData} from "../utils/userdata";
 
 export function UserCard({user}) {
-  const {name, pfp, role, enabled, username, id} = user;
+  const {name, role, enabled, username, id} = user;
   const [token, setToken] = useState('');
   const [userData, setUserData] = useState({});
   const [isEnabled, setIsEnabled] = useState(enabled);
@@ -82,13 +83,7 @@ export function UserCard({user}) {
   return (
     <View className="flex flex-row w-full h-16 mb-4 p-2 rounded-full items-center justify-between bg-darkgray">
       <View className="flex flex-row items-center">
-        {pfp ? <Image source={{
-          uri: pfp,
-          method: 'GET',
-          headers: { Authorization: 'Bearer ' + token },
-        }} className="w-12 h-12 rounded-full" resizeMode="cover" />
-          : <Image source={icons.userIcon} className="w-12 h-12 rounded-full" resizeMode="contain" />
-        }
+       <ProfilePicture user={user} token={token} size="h-12 w-12" />
         <View>
           <Text className={`text-xl font-bold pl-4 ${role === 'EC' ? 'color-ECcolor' : (role === 'CC' ? 'color-CCcolor' : 'color-JCcolor')}`}>{name}</Text>
           <Text className="text-sm pl-4 text-gray">{username}</Text>

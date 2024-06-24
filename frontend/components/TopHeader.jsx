@@ -1,8 +1,9 @@
 import {Image, TouchableOpacity, View} from "react-native";
 import icons from "../constants/icons";
 import React, {useEffect, useState} from "react";
-import {getUserData, setToken} from "../utils/userdata";
+import {getUserData} from "../utils/userdata";
 import {router} from "expo-router";
+import ProfilePicture from "./ProfilePicture";
 
 function TopHeader() {
 
@@ -12,15 +13,11 @@ function TopHeader() {
     getUserData().then(setUserData);
   }, []);
 
-
-
   return (
     <View className="flex flex-row items-center justify-between w-full">
       <Image source={icons.cs} className="w-44 h-16" resizeMode="contain"/>
-      <TouchableOpacity onPress={()=>{router.push("profile")}} >
-        {userData.pfp
-          ? <Image source={{uri: userData.pfp}} className="w-16 h-16 rounded-full" resizeMode="cover" />
-          : <Image source={icons.userIcon} className="w-16 h-16 rounded-full" resizeMode="contain" />}
+      <TouchableOpacity onPress={()=>{router.push("profile?id=" + userData.id)}} >
+        <ProfilePicture size={"h-16 w-16"} user={{pfp: userData.pfp, id: userData.id}} token={userData.token} />
       </TouchableOpacity>
     </View>
   );

@@ -76,7 +76,7 @@ router.get('/pending', async (req, res) => {
 
     // Query pending invoices from the database
     const data = await pool.query(`
-      SELECT invoices."id", invoices."amount", e."name" as "eventName", u."name", u."username", "fileUrl", "eventId", u."pfp", u."role"
+      SELECT invoices."id", invoices."amount", e."name" as "eventName", u."name", u."username", "fileUrl", "eventId", u."pfp", u."role", invoices."createdBy"
       FROM "public"."invoices"
       INNER JOIN public.events e on e.id = invoices."eventId" 
       INNER JOIN public.users u on u.id = invoices."createdBy" 
