@@ -329,4 +329,23 @@ router.post('/delete', async (req, res) => {
   }
 });
 
+router.get('/:id', async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({success: false, message: 'Unauthorized'});
+    }
+
+    const { id } = req.params;
+    const data = await pool.query('SELECT "id", "name", "pfp", "enabled", "role", "post", "username" FROM "public"."users" WHERE "id" = $1', [id]);
+    if (data.rowCount === 0) {
+      return res.status(404).json({success: false, message: 'User not found'});
+    }
+
+    res.status(200).json({success: true, data: data.rows[0]});
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({success: false, message: 'Internal Server Error'});
+  }
+});
+
 export default router;
