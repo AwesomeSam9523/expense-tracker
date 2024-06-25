@@ -19,7 +19,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/ieeecs-logo.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.samakshgupta.expensetracker"
     },
     "web": {
       "bundler": "metro",
@@ -29,6 +30,14 @@
     "plugins": [
       "expo-router"
     ],
-    "entryPoint": "./node_modules/expo-router/entry"
+    "entryPoint": "./node_modules/expo-router/entry",
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "3bf2420a-056b-425a-9fe3-965673354100"
+      }
+    }
   }
 }

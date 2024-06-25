@@ -32,6 +32,7 @@ import designation from "../assets/icons/designation.png"
 import id from "../assets/icons/id.png"
 import unauthorized from "../assets/icons/unauthorized.png"
 import blank from "../assets/icons/blank.png"
+import copy from "../assets/icons/copy.png"
 
 export default {
   budget,
@@ -68,4 +69,5 @@ export default {
   id,
   unauthorized,
   blank,
+  copy,
 }
