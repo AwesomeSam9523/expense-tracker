@@ -5,6 +5,8 @@ import {
   TouchableOpacity,
   FlatList,
   RefreshControl,
+  Button,
+  Text
 } from "react-native";
 import icons from "../../../constants/icons";
 import React, { useEffect, useState } from "react";
@@ -15,12 +17,16 @@ import SearchBar from "../../../components/SearchBar";
 import AddButton from "../../../components/AddButton";
 import TopHeader from "../../../components/TopHeader";
 import {getUserData} from "../../../utils/userdata";
-
+import FilterModal from "../../../components/Filter";
 function Index() {
   const [events, setEvents] = useState([]);
   const [searchPhrase, setSearchPhrase] = useState("");
   const [refreshing, setRefreshing] = useState(false);
   const [userData, setUserData] = useState({});
+  const [isModalVisible, setModalVisible] = useState(false);
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -49,13 +55,14 @@ function Index() {
           />
 
           <View className="flex-1 items-center justify-center">
-            <TouchableOpacity>
+            <TouchableOpacity onPress={toggleModal} >
               <Image
                 source={icons.filter}
                 className="w-8 h-8"
                 resizeMode="contain"
               />
             </TouchableOpacity>
+            <FilterModal visible={isModalVisible} toggle={toggleModal} />
           </View>
         </View>
 

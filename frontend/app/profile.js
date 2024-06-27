@@ -1,35 +1,74 @@
-import { View, Image, Text, TouchableOpacity } from "react-native";
+import {
+  View,
+  Image,
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
-import {getUserData, setToken} from "../utils/userdata";
-import {router, useLocalSearchParams} from "expo-router";
+import { getUserData, setToken } from "../utils/userdata";
+import { router, useLocalSearchParams } from "expo-router";
 import ProfileButton from "../components/ProfileButton";
 import icons from "../constants/icons";
-import {service} from "../utils/service";
+import { service } from "../utils/service";
 
 const Profile = () => {
   const [userData, setUserData] = useState({});
   const [mine, setMine] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   const { id } = useLocalSearchParams();
 
   useEffect(() => {
-    service.get(`/user/${id}`).then((res) => {
-      setUserData(res.data);
-    });
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const res = await service.get(`/user/${id}`);
+        setUserData(res.data);
 
-    getUserData().then((data) => {
-      if (data.id === id) {
-        setMine(true);
+        const data = await getUserData();
+        if (data.id === id) {
+          setMine(true);
+        }
+      } catch (err) {
+        setError(err.message || "An error occurred while fetching user data.");
+      } finally {
+        setIsLoading(false);
       }
-    });
-  }, []);
+    };
+
+    fetchData();
+  }, [id]);
 
   const logout = async () => {
     await setUserData({});
-    await setToken('');
+    await setToken("");
     router.replace("/");
+  };
+
+  if (isLoading) {
+    return (
+      <SafeAreaView className="flex-1">
+        <View className="justify-center items-center w-full h-full bg-primary">
+          <ActivityIndicator size="large" color="#8A8A8A" />
+        </View>
+      </SafeAreaView>
+    );
   }
+
+  if (error) {
+    return (
+      <SafeAreaView className="flex-1 ">
+        <View className="justify-center items-center w-full h-full bg-primary">
+        <Text className="text-textgray text-lg">{error}</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView className="flex-1">
       <View className="flex justify-start bg-primary w-full h-full">
@@ -38,7 +77,7 @@ const Profile = () => {
             onPress={() => {
               router.back();
             }}
-            style={{ position: 'absolute', top: 20, left: 20, zIndex: 10 }}
+            style={{ position: "absolute", top: 20, left: 20, zIndex: 10 }}
           >
             <View className="bg-darkgray p-2 rounded-full">
               <Image
@@ -64,8 +103,10 @@ const Profile = () => {
               <Text className="text-white font-extrabold text-4xl">
                 {userData.name}
               </Text>
-              <View className="border-2 rounded-full px-4 py-1 mx-3 border-secondary">
-                <Text className="text-secondary font-bold">{userData.role}</Text>
+              <View className="flex items-center justify-center border-2 rounded-full px-4 py-1 mx-3 border-secondary">
+                <Text className="text-secondary font-bold">
+                  {userData.role}
+                </Text>
               </View>
             </View>
             <View>
@@ -73,11 +114,20 @@ const Profile = () => {
               <Text className="text-secondary text-lg">{userData.post}</Text>
             </View>
           </View>
-          {mine ? <View className="flex justify-center items-center mt-8">
-            <ProfileButton icon={icons.profile_password} value="Change Password" />
-            <ProfileButton icon={icons.invoice} value="My Invoices" />
-            <ProfileButton icon={icons.logOut} value="Logout" handlePress={logout} />
-          </View> : null}
+          {mine ? (
+            <View className="flex justify-center items-center mt-8">
+              <ProfileButton
+                icon={icons.profile_password}
+                value="Change Password"
+              />
+              <ProfileButton icon={icons.invoice} value="My Invoices" />
+              <ProfileButton
+                icon={icons.logOut}
+                value="Logout"
+                handlePress={logout}
+              />
+            </View>
+          ) : null}
         </View>
       </View>
     </SafeAreaView>

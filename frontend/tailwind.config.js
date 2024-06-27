@@ -17,6 +17,7 @@ module.exports = {
         JCcolor: "#68ff61",
         notifUnread : "rgba(249,163,26,0.25)",
         fadered: "#490011",
+        modal: "#393939"
       },
       fontFamily : {
         bextrabold : ["Barlow-ExtraBold", "sans-sarif"],
