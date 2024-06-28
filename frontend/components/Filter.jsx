@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Image } from "react-native";
 import Modal from "react-native-modal";
-
-function FilterButton({title, handlePress}) {
+import icons from "../constants/icons"
+function FilterButton({ title, handlePress }) {
     return (
         <TouchableOpacity onPress={handlePress}>
             <View className="bg-primary p-4 rounded-full my-1">
@@ -19,13 +19,27 @@ function FilterModal({ visible, toggle }) {
     return (
         <Modal isVisible={visible} onBackdropPress={toggle} backdropOpacity={0.30}>
             <View className="bg-modal rounded-lg p-6">
-                <Text className="text-white text-3xl font-bold mb-4 font-bextrabold">Search by filters</Text>
+                <View className="flex flex-row items-center"> 
+                    <TouchableOpacity
+                        onPress={toggle}
+
+                    >
+                        <View className="bg-darkgray p-2 rounded-full">
+                            <Image
+                                source={icons.leftArrow}
+                                className="w-8 h-8  rounded-full"
+                                resizeMode="contain"
+                            />
+                        </View>
+                    </TouchableOpacity>
+                    <Text className="text-white text-2xl font-bold mb-4 font-bextrabold px-5">Search by filters</Text>
+                </View>
                 <View className="px-5">
-                    <FilterButton title={"Event Name"} handlePress={()=>{setFilter("eventname")}} />
-                    <FilterButton title={"Newest to Oldest"} handlePress={()=>{setFilter("eventname")}}/>
-                    <FilterButton title={"Oldest to Newest"} handlePress={()=>{setFilter("eventname")}}/>
-                    <FilterButton title={"High to Low Amount"} handlePress={()=>{setFilter("eventname")}}/>
-                    <FilterButton title={"Low to High Amount"} handlePress={()=>{setFilter("eventname")}}/>
+                    <FilterButton title={"Event Name"} handlePress={() => { setFilter("eventname") }} />
+                    <FilterButton title={"Newest to Oldest"} handlePress={() => { setFilter("eventname") }} />
+                    <FilterButton title={"Oldest to Newest"} handlePress={() => { setFilter("eventname") }} />
+                    <FilterButton title={"High to Low Amount"} handlePress={() => { setFilter("eventname") }} />
+                    <FilterButton title={"Low to High Amount"} handlePress={() => { setFilter("eventname") }} />
                 </View>
 
 

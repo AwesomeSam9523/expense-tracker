@@ -3,7 +3,8 @@ import {
   View,
   Text,
   TouchableOpacity,
-  ScrollView
+  ScrollView,
+  Clipboard
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
@@ -72,12 +73,12 @@ const CreateEvent = () => {
               placeholder="Post"
             />
 
-            <View className="flex flex-row w-full px-10 justify-between py-5">
+            <View className="flex flex-row w-full justify-between py-5">
               {radioButtonsData.map((data, key) => {
                 return (
                   <View key={key} className={`flex flex-row rounded-full border-2 px-6 py-2 mx-5 ${user.role === data ? 'border-secondary' : 'border-gray'}`}>
                     <TouchableOpacity
-                      className="flex flex-row w-full"
+                      className="flex flex-row"
                       onPress={()=> {setUser({...user, role: data})}}>
                       {/*<Image source={icons.unchecked} />*/}
                       <Text className={`text-xl ${user.role === data ? 'text-secondary' : 'text-gray'}`}>{data}</Text>
@@ -87,11 +88,18 @@ const CreateEvent = () => {
               })}
             </View>
 
-            <EventForm
-              icon={icons.id}
-              placeholder={user.username}
-              editable={false}
-            />
+            <View className="flex flex-row items-center">
+              <EventForm
+                icon={icons.id}
+                placeholder={user.username}
+                editable={false}
+              />
+              <View className="absolute right-4">
+                <TouchableOpacity onPress={() => {Clipboard.setString(user.username)}}>
+                  <Image source={icons.copy} className="w-10 h-10" resizeMode="contain" />
+                </TouchableOpacity>
+              </View>
+            </View>
 
             <View className="my-12">
               <SubmitButton handlePress={submit} />
