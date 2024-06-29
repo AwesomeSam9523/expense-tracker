@@ -1,8 +1,8 @@
 import { Image, StatusBar, View } from "react-native";
 import React from "react";
 import { Tabs } from "expo-router";
-import icons from "../../constants/icons"; // Ensure this path is correct
-import { Stack } from 'expo-router'
+import icons from "../../constants/icons"; 
+
 const TabBarIcon = ({ icon, focused }) => (
   <View
     style={{
@@ -17,7 +17,7 @@ const TabBarIcon = ({ icon, focused }) => (
         width: 24,
         height: 24,
         tintColor: focused ? "#262626" : "#ffffff",
-        resizeMode: "contain", // Added resizeMode to contain the icon
+        resizeMode: "contain", 
       }}
     />
   </View>
