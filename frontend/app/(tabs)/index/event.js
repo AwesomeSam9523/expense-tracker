@@ -17,7 +17,6 @@ import { getToken, getUserData } from "../../../utils/userdata";
 import ToggleSwitch from "../../../components/ToggleSwitch";
 import InvoiceCard from "../../../components/InvoiceCard";
 import AddButton from "../../../components/AddButton";
-import { isCatchClause } from "typescript";
 
 const ButtonComponent = ({
   text,
@@ -79,15 +78,15 @@ function Event() {
       try {
         setIsLoading(true);
         setError(null);
-  
+
         const eventResponse = await service.get(`/event/${eventId}`);
         if (!eventResponse.success) {
           router.back();
           return;
         }
-  
+
         const invoiceResponse = await service.get(`/invoice/event/${eventId}`);
-  
+
         setData({
           ...eventResponse.data,
           budgetLeft: eventResponse.data.budget - eventResponse.data.expenditure,
@@ -98,13 +97,13 @@ function Event() {
         setError(err.message || "An error occurred while fetching data.");
       } finally {
         setIsLoading(false);
-        setRefreshing(false); 
+        setRefreshing(false);
       }
     };
-  
+
     fetchData();
   }, [refreshing]);
-  
+
 
   useEffect(() => {
     getToken().then(setToken);
@@ -270,7 +269,7 @@ function Event() {
         ) : (
           <View className="w-full flex items-center">
             <FlatList
-              className="flex flex-grow h-[55%] w-[90%]"
+              className="flex flex-grow h-[45%] w-[90%]"
               data={invoices}
               renderItem={({ item }) => <InvoiceCard invoice={item} />}
               refreshControl={
