@@ -24,7 +24,7 @@ const SignIn = () => {
     }
     setLoading(true);
     try {
-      const response = await service.post(" ", form);
+      const response = await service.post("/user/login", form);
       console.log("response data-->", response);
       if (!response.success) {
         setErrorMessage(response.message);
