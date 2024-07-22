@@ -9,7 +9,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "test": "jest --watchAll",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "eas-build-post-install": "tailwindcss -i ./global.css -o ./node_modules/.cache/nativewind/global.css.native.css"
   },
   "jest": {
     "preset": "jest-expo"

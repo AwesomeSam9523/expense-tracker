@@ -35,6 +35,7 @@ function Index() {
   useEffect(() => {
     service.get(`/event/list?search=${searchPhrase}`).then((response) => {
       setEvents(response.data);
+      console.log(events)
       setRefreshing(false);
     });
   }, [searchPhrase, refreshing]);

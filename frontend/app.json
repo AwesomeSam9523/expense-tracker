@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "IEEE CS",
-    "slug": "expense-tracker",
+    "slug": "ieee-expense-tracker",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -36,7 +36,8 @@
         "origin": false
       },
       "eas": {
-        "projectId": "3bf2420a-056b-425a-9fe3-965673354100"
+        "projectId": "e7623ab9-6a7d-46c6-8aec-3d449b20cbf1",
+        "slug": "ieee-expense-tracker"
       }
     }
   }
