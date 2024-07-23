@@ -2,7 +2,7 @@ import { Image, View } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useEffect, useState } from "react";
-import { getToken } from "../../../utils/userdata";
+import { getToken } from "../utils/userdata";
 
 function ViewInvoice() {
   const { fileUrl } = useLocalSearchParams();
