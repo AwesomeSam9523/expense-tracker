@@ -32,7 +32,7 @@ const CreateEvent = () => {
   }
 
   const radioButtonsData = ["EC", "CC", "JC"];
-  const [discriminator, setDiscriminator] = useState(Math.floor(1000 + Math.random() * 9000));
+  const discriminator = Math.floor(1000 + Math.random() * 9000);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

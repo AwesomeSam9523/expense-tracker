@@ -1,4 +1,4 @@
-import { TouchableOpacity, Text, Image, View } from "react-native";
+import { TouchableOpacity, Image, View } from "react-native";
 import icons from "../constants/icons";
 
 const SubmitButton = ({
@@ -10,7 +10,7 @@ const SubmitButton = ({
       <TouchableOpacity
         onPress={handlePress}
         disabled={isLoading}
-        
+
       >
         <Image className="w-20" resizeMode="contain" source={icons.buttonIcon} />
       </TouchableOpacity>

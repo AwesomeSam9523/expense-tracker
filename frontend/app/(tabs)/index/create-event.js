@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import EventForm from "../../../components/EventForm";
 import icons from "../../../constants/icons";
@@ -71,7 +71,7 @@ const CreateEvent = () => {
             onPress={() => {
               router.back();
             }}
-          
+
           >
             <View className="bg-darkgray p-2 rounded-full">
               <Image

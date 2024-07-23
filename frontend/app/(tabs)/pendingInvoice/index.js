@@ -47,6 +47,7 @@ export default function PendingInvoices() {
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
           />
+          {pendingInvoices.length === 0 ? <Text className="text-white pt-8 text-2xl absolute bottom-[50%]">🎉 Nothing here, Woohoo!</Text> : null}
         </View>
       : <NotAuthorized />}
     </SafeAreaView>

@@ -9,7 +9,7 @@ async function getUserData() {
   }
 }
 
-async function setUserData(value: Object) {
+async function setUserData(value: object) {
   try {
     const jsonValue = JSON.stringify(value);
     await AsyncStorage.setItem('userData', jsonValue);

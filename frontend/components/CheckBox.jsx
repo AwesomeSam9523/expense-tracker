@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Image} from 'react-native';
 import CheckBox from 'react-native-check-box';
 import icons from "../constants/icons";
