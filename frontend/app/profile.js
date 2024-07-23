@@ -49,6 +49,10 @@ const Profile = () => {
     router.replace("/");
   };
 
+  const changePass = async () => {
+    router.replace("/change-password");
+  };
+
   if (isLoading) {
     return (
       <SafeAreaView className="flex-1">
@@ -119,6 +123,7 @@ const Profile = () => {
               <ProfileButton
                 icon={icons.profile_password}
                 value="Change Password"
+                handlePress={changePass}
               />
               <ProfileButton icon={icons.invoice} value="My Invoices" />
               <ProfileButton
