@@ -23,7 +23,7 @@ export function PendingInvoiceCard({invoice, onAction}) {
   }, []);
 
   return (
-    <TouchableOpacity onPress={() => router.navigate('pendingInvoice/view-invoice?fileUrl=' + fileUrl)}>
+    <TouchableOpacity onPress={() => router.navigate('view-invoice?fileUrl=' + fileUrl)}>
       <View className="flex flex-row w-full h-20 mb-4 p-2 rounded-2xl items-center justify-between bg-darkgray">
         <View className="flex flex-row items-center">
           <ProfilePicture size={"h-14 w-14"} user={{ pfp, id: createdBy }} token={token} />

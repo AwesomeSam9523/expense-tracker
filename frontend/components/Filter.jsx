@@ -19,7 +19,7 @@ function FilterModal({ visible, toggle }) {
     return (
         <Modal isVisible={visible} onBackdropPress={toggle} backdropOpacity={0.30}>
             <View className="bg-modal rounded-lg p-6">
-                <View className="flex flex-row items-center"> 
+                <View className="flex flex-row items-center">
                     <TouchableOpacity
                         onPress={toggle}
 
