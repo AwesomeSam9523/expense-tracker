@@ -5,8 +5,6 @@ import {
   TouchableOpacity,
   FlatList,
   RefreshControl,
-  Button,
-  Text
 } from "react-native";
 import icons from "../../../constants/icons";
 import React, { useEffect, useState } from "react";
@@ -24,21 +22,29 @@ function Index() {
   const [refreshing, setRefreshing] = useState(false);
   const [userData, setUserData] = useState({});
   const [isModalVisible, setModalVisible] = useState(false);
+  const [filter, setFilter] = useState('NewToOld');
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
 
-  const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
-  }, []);
-
-  useEffect(() => {
-    service.get(`/event/list?search=${searchPhrase}`).then((response) => {
+  function fetchEventsData() {
+    service.get(`/event/list?search=${searchPhrase}&filter=${filter}`).then((response) => {
       setEvents(response.data);
-      console.log(events)
       setRefreshing(false);
     });
-  }, [searchPhrase, refreshing]);
+  }
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    fetchEventsData();
+  }, []);
+
+  function onFilterSelect(filter) {
+    setFilter(filter);
+    setModalVisible(false);
+  }
+
+  useEffect(fetchEventsData, [searchPhrase, filter]);
 
   useEffect(() => {
     getUserData().then(setUserData);
@@ -63,7 +69,11 @@ function Index() {
                 resizeMode="contain"
               />
             </TouchableOpacity>
-            <FilterModal visible={isModalVisible} toggle={toggleModal} />
+            <FilterModal
+              visible={isModalVisible}
+              toggle={() => setModalVisible(!isModalVisible)}
+              setFilter={onFilterSelect}
+            />
           </View>
         </View>
 
@@ -74,6 +84,7 @@ function Index() {
             <EventCard
               key={item.id}
               event={item}
+              userRole={userData.role}
             />
           )}
           refreshControl={

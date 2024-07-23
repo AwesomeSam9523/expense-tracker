@@ -14,8 +14,7 @@ function FilterButton({title, handlePress}) {
   )
 }
 
-function FilterModal({visible, toggle}) {
-  const [filter, setFilter] = useState()
+function FilterModal({visible, toggle, setFilter}) {
   // const filterQuery = filter
   return (
     <Modal isVisible={visible} onBackdropPress={toggle} backdropOpacity={0.30}>
@@ -37,19 +36,19 @@ function FilterModal({visible, toggle}) {
         </View>
         <View className="px-5">
           <FilterButton title={"Event Name"} handlePress={() => {
-            setFilter("eventname")
+            setFilter("EventName")
           }}/>
           <FilterButton title={"Newest to Oldest"} handlePress={() => {
-            setFilter("newtoold")
+            setFilter("NewToOld")
           }}/>
           <FilterButton title={"Oldest to Newest"} handlePress={() => {
-            setFilter("oldtonew")
+            setFilter("OldToNew")
           }}/>
           <FilterButton title={"High to Low Amount"} handlePress={() => {
-            setFilter("hightolow")
+            setFilter("HighToLow")
           }}/>
           <FilterButton title={"Low to High Amount"} handlePress={() => {
-            setFilter("lowtohigh")
+            setFilter("LowToHigh")
           }}/>
         </View>
 
