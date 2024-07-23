@@ -1,4 +1,4 @@
-import {View, Text, Image, ScrollView} from "react-native";
+import {View, Text, Image, ScrollView, ActivityIndicator} from "react-native";
 import React, {useEffect, useState} from "react";
 import {SafeAreaView} from "react-native-safe-area-context";
 import icons from "../constants/icons";
@@ -17,6 +17,7 @@ const SignIn = () => {
   const [request, setRequest] = useState("");
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [autoLogin, setAutoLogin] = useState(true);
 
   const submit = async () => {
     if (!form.username || !form.password) {
@@ -56,10 +57,22 @@ const SignIn = () => {
           router.replace("/first-login");
         }
       }
+      setAutoLogin(false);
     }
 
     fetchData();
   }, [request]);
+
+  if (autoLogin) {
+    return (
+      <SafeAreaView className="flex-1">
+        <View className="justify-center items-center w-full h-full bg-primary gap-2">
+          <ActivityIndicator size="large" color="#8A8A8A" />
+          <Text className="text-xl text-gray">Logging In</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={{flex: 1}}>
