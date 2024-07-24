@@ -71,43 +71,43 @@ function Event() {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
+    fetchData();
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
+  async function fetchData() {
+    try {
+      setIsLoading(true);
+      setError(null);
 
-        const eventResponse = await service.get(`/event/${eventId}`);
-        if (!eventResponse.success) {
-          router.back();
-          return;
-        }
-
-        const invoiceResponse = await service.get(`/invoice/event/${eventId}`);
-
-        setData({
-          ...eventResponse.data,
-          budgetLeft: eventResponse.data.budget - eventResponse.data.expenditure,
-        });
-        setToggle(!data.closed);
-        setInvoices(invoiceResponse.data);
-      } catch (err) {
-        setError(err.message || "An error occurred while fetching data.");
-      } finally {
-        setIsLoading(false);
-        setRefreshing(false);
+      const eventResponse = await service.get(`/event/${eventId}`);
+      if (!eventResponse.success) {
+        router.back();
+        return;
       }
-    };
 
-    fetchData();
-  }, [refreshing]);
+      const invoiceResponse = await service.get(`/invoice/event/${eventId}`);
 
+      setData({
+        ...eventResponse.data,
+        budgetLeft: eventResponse.data.budget - eventResponse.data.expenditure,
+      });
+      setToggle(!data.closed);
+      setInvoices(invoiceResponse.data);
+    } catch (err) {
+      setError(err.message || "An error occurred while fetching data.");
+    } finally {
+      setIsLoading(false);
+      setRefreshing(false);
+    }
+  }
 
   useEffect(() => {
     getToken().then(setToken);
     getUserData().then(setUserData);
+  }, []);
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
   function deleteEvent() {

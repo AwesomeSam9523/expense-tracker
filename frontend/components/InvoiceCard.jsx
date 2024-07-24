@@ -42,7 +42,10 @@ export function InvoiceCard({ invoice }) {
         <View className=" flex flex-row items-center">
           <ProfilePicture size={"h-14 w-14"} user={{ pfp, id: createdBy }} token={token} />
           <View>
-            <Text className={`text-xl font-bold pl-4 ${role === 'EC' ? 'color-ECcolor' : (role === 'CC' ? 'color-CCcolor' : 'color-JCcolor')}`}>{name}</Text>
+            <Text className={`text-xl font-bold pl-4 ${
+              role === 'EC' 
+                ? 'color-ECcolor' 
+                : (role === 'CC' ? 'color-CCcolor' : (role === 'JC' ? 'color-JCcolor' : 'text-white'))}`}>{name}</Text>
             <View className="flex flex-row">
               <Text className="ml-4 text-white">Status:</Text>
               <Text className={`pl-2 ${getStatusColorClass(status)}`} >

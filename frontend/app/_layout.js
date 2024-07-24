@@ -35,6 +35,7 @@ const RootLayout = () => {
         <Stack.Screen name="profile" options={{ headerShown: false }}/>
         <Stack.Screen name="change-password" options={{ headerShown: false }}/>
         <Stack.Screen name="view-invoice" options={{headerTitle: 'Invoice'}} />
+        <Stack.Screen name="my-invoices" options={{ headerShown: false }} />
       </Stack>
       <Toast visibilityTime={2000} />
     </>

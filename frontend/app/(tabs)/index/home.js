@@ -44,7 +44,9 @@ function Index() {
     setModalVisible(false);
   }
 
-  useEffect(fetchEventsData, [searchPhrase, filter]);
+  useEffect(() => {
+    fetchEventsData();
+  }, [searchPhrase, filter]);
 
   useEffect(() => {
     getUserData().then(setUserData);
