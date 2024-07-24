@@ -1,5 +1,5 @@
 import {SafeAreaView} from "react-native-safe-area-context";
-import {Text, View, ScrollView,TouchableOpacity, Image} from "react-native";
+import {Text, View, ScrollView, TouchableOpacity, Image} from "react-native";
 import icons from "../constants/icons";
 import React, {useState} from "react";
 import FormField from "../components/FormField";
@@ -10,10 +10,10 @@ import {router} from "expo-router";
 
 
 const ChangePassword = () => {
-    const [newPassword, setNewPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-      async function submit() {
+  async function submit() {
     if (newPassword !== confirmPassword) {
       alert("Passwords do not match");
       return;
@@ -24,7 +24,7 @@ const ChangePassword = () => {
       return;
     }
 
-    const response = await service.post('/user/changePassword', { newPassword });
+    const response = await service.post('/user/changePassword', {newPassword});
     console.log(response);
     if (response.success) {
       const token = response.data;
@@ -34,26 +34,26 @@ const ChangePassword = () => {
   }
 
   return (
-    
-    <SafeAreaView style={{ flex: 1 }}>
+
+    <SafeAreaView style={{flex: 1}}>
       <ScrollView className='bg-primary h-full pt-[5%] w-full px-6' contentContainerStyle={{
         justifyContent: 'center',
         alignItems: 'center',
       }}>
         <TouchableOpacity
-            onPress={() => {
-              router.back();
-            }}
-            style={{ position: "absolute", top: 10, left: 20, zIndex: 10 }}
-          >
-            <View className="bg-darkgray p-2 rounded-full">
-              <Image
-                source={icons.leftArrow}
-                className="w-8 h-8 rounded-full"
-                resizeMode="contain"
-              />
-            </View>
-          </TouchableOpacity>
+          onPress={() => {
+            router.back();
+          }}
+          style={{position: "absolute", top: 10, left: 20, zIndex: 10}}
+        >
+          <View className="bg-darkgray p-2 rounded-full">
+            <Image
+              source={icons.leftArrow}
+              className="w-8 h-8 rounded-full"
+              resizeMode="contain"
+            />
+          </View>
+        </TouchableOpacity>
         <View className="flex flex-col gap-2 pt-[50%]">
           <Text className="text-white text-4xl font-bextrabold">Welcome Aboard!</Text>
           <Text className="text-gray text-xl">Time to secure your journey with a new password.</Text>
@@ -79,11 +79,9 @@ const ChangePassword = () => {
           <SubmitButton handlePress={submit}/>
         </View>
 
-
-        
       </ScrollView>
     </SafeAreaView>
   )
 }
 
-export default ChangePassword
+export default ChangePassword;
