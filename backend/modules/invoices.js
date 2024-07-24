@@ -209,16 +209,10 @@ router.get('/mine', async (req, res) => {
     }
 
     const data = await pool.query(
-      'SELECT id, "fileUrl", amount, "createdAt", "createdBy", accepted, "actionedBy", "actionedAt", "eventId" FROM "public"."invoices" WHERE "createdBy" = $1',
+      `SELECT i."id", i."fileUrl", i.amount, i."createdAt", i."createdBy", i.accepted, i."actionedBy", i."actionedAt", e.name, e.image as "pfp" FROM "public"."invoices" i
+      INNER JOIN "public"."events" e on e."id" = i."eventId" WHERE i."createdBy" = $1`,
       [req.user.id]
     );
-
-    if (data.rowCount === 0) {
-      return res.status(404).json({
-        success: false,
-        message: 'No invoices found for this user',
-      });
-    }
 
     res.status(200).json({success: true, data: data.rows});
   } catch (error) {
