@@ -1,4 +1,4 @@
-import {View, Text, Image, ScrollView, ActivityIndicator} from "react-native";
+import {View, Text, Image, ScrollView, ActivityIndicator, Alert, BackHandler} from "react-native";
 import React, {useEffect, useState} from "react";
 import {SafeAreaView} from "react-native-safe-area-context";
 import icons from "../constants/icons";
@@ -43,6 +43,30 @@ const SignIn = () => {
       setLoading(false);
     }
   }
+
+  useEffect(() => {
+    const backAction = () => {
+      Alert.alert('Hold on!', 'Are you sure you want to exit?', [
+        {
+          text: 'Cancel',
+          onPress: () => null,
+          style: 'cancel',
+        },
+        {
+          text: 'Yes',
+          onPress: () => BackHandler.exitApp(),
+        },
+      ]);
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   useEffect(() => {
     async function fetchData() {
