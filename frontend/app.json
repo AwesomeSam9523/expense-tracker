@@ -1,11 +1,11 @@
 {
   "expo": {
     "name": "CS Tijori",
-    "slug": "ieee-expense-tracker",
+    "slug": "expense-tracker",
     "version": "1.1.0",
     "orientation": "portrait",
-    "icon": "assets/images/icon.png",
-    "scheme": "myapp",
+    "icon": "./assets/images/icon.png",
+    "scheme": "cstijori",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "assets/images/splash-screen.png",
@@ -17,7 +17,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/ieeecs-logo.png",
+        "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.samakshgupta.expensetracker"
@@ -36,8 +36,8 @@
         "origin": false
       },
       "eas": {
-        "projectId": "e7623ab9-6a7d-46c6-8aec-3d449b20cbf1",
-        "slug": "ieee-expense-tracker"
+        "projectId": "3bf2420a-056b-425a-9fe3-965673354100",
+        "slug": "expense-tracker"
       }
     }
   }
