@@ -45,7 +45,7 @@ This file has the following routes:
 import { v4 as uuidv4 } from 'uuid';
 import { Router } from 'express';
 import pool from '../utils/database.js';
-import hashPassword from "../utils/tools.js";
+import {uploadImage, hashPassword} from "../utils/tools.js";
 
 const router = Router();
 
@@ -347,5 +347,41 @@ router.get('/:id', async (req, res) => {
     res.status(500).json({success: false, message: 'Internal Server Error'});
   }
 });
+
+router.post('/pfp', async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({success: false, message: 'Unauthorized'});
+    }
+
+    // Get the file from body
+    const {image, mimeType} = req.body;
+    if (!image || !mimeType) {
+      return res.status(400).json({success: false, message: 'Image and mimeType are required'});
+    }
+
+    const fileExtension = mimeType.split('/')[1];
+    const id = uuidv4();
+    try {
+      await uploadImage(id, image, mimeType);
+    } catch (e) {
+      console.error(e);
+      return res.status(500).json({success: false, message: 'Internal Server Error'});
+    }
+
+    const imageUrl = `https://awesomesam.dev/api/ieee/${id}.${fileExtension}`;
+    await pool.query('UPDATE "public"."users" SET "pfp" = $1 WHERE "id" = $2', [imageUrl, req.user.id]);
+
+    res.status(201).json({
+      success: true,
+      message: 'Profile picture updated!',
+      data: {imageUrl}
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({success: false, message: 'Internal Server Error'});
+  }
+});
+
 
 export default router;

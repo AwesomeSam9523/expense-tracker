@@ -1,7 +1,7 @@
 import {v4 as uuidv4} from 'uuid';
 import {Router} from 'express';
 import pool from '../utils/database.js';
-import axios from "axios";
+import {uploadImage} from "../utils/tools.js";
 
 const router = Router();
 
@@ -31,16 +31,7 @@ router.post('/new', async (req, res) => {
     const fileExtension = mimeType.split('/')[1];
     const id = uuidv4();
     try {
-      await axios.post('https://awesomesam.dev/api/ieee/upload', {
-        id,
-        image,
-        mimeType,
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${process.env.IEEE_CS_KEY}`
-        }
-      });
+      await uploadImage(id, image, mimeType);
     } catch (e) {
       console.error(e);
       return res.status(500).json({success: false, message: 'Internal Server Error'});
