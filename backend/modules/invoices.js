@@ -202,13 +202,16 @@ router.get('/event/:eventId', async (req, res) => {
   }
 });
 
-router.post('/mine', async (req, res) => {
+router.get('/mine', async (req, res) => {
   try {
     if (!req.user) {
       return res.status(401).json({success: false, message: 'Unauthorized'});
     }
 
-    const data = await pool.query('SELECT id, "fileUrl", amount, "createdAt", "createdBy", accepted, "actionedBy", "actionedAt", "eventId" FROM "public"."invoices" WHERE "createdBy" = $1', [req.user.id]);
+    const data = await pool.query(
+      'SELECT id, "fileUrl", amount, "createdAt", "createdBy", accepted, "actionedBy", "actionedAt", "eventId" FROM "public"."invoices" WHERE "createdBy" = $1',
+      [req.user.id]
+    );
 
     if (data.rowCount === 0) {
       return res.status(404).json({
