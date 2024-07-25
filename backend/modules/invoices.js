@@ -213,7 +213,7 @@ router.get('/mine', async (req, res) => {
 
     const data = await pool.query(
       `SELECT i."id", i."fileUrl", i.amount, i."createdAt", i."createdBy", i.accepted, i."actionedBy", i."actionedAt", e.name, e.image as "pfp" FROM "public"."invoices" i
-      INNER JOIN "public"."events" e on e."id" = i."eventId" WHERE i."createdBy" = $1`,
+      INNER JOIN "public"."events" e on e."id" = i."eventId" WHERE i."createdBy" = $1 ORDER BY "createdAt" DESC`,
       [req.user.id]
     );
 
