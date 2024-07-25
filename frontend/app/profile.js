@@ -8,7 +8,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
-import * as ImagePicker from "expo-image-picker"; 
+import * as ImagePicker from "expo-image-picker";
 import { getUserData, setToken } from "../utils/userdata";
 import { router, useLocalSearchParams } from "expo-router";
 import ProfileButton from "../components/ProfileButton";
@@ -70,8 +70,8 @@ const Profile = () => {
         mimeType: image.mimeType,
       });
 
-      if (response.status === 200) {
-        setUserData({ ...userData, pfp: image.uri });
+      if (response.success) {
+        setUserData({ ...userData, pfp: response.data.imageUrl });
       }
     } catch (err) {
       setError("An error occurred while updating the profile picture.");
@@ -128,7 +128,7 @@ const Profile = () => {
                   tintColor="#FAA41A"
                   resizeMode="contain"
                 />
-         
+
             </TouchableOpacity>
           )}
           <Image
