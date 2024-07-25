@@ -8,6 +8,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
+import * as ImagePicker from "expo-image-picker"; 
 import { getUserData, setToken } from "../utils/userdata";
 import { router, useLocalSearchParams } from "expo-router";
 import ProfileButton from "../components/ProfileButton";
@@ -49,6 +50,34 @@ const Profile = () => {
     router.replace("/");
   };
 
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      quality: 1,
+      base64: true,
+    });
+
+    if (result.canceled) {
+      return;
+    }
+
+    const image = result.assets[0];
+
+    try {
+      const response = await service.post("/user/pfp", {
+        image: image.base64,
+        mimeType: image.mimeType,
+      });
+
+      if (response.status === 200) {
+        setUserData({ ...userData, pfp: image.uri });
+      }
+    } catch (err) {
+      setError("An error occurred while updating the profile picture.");
+    }
+  };
+
   if (isLoading) {
     return (
       <SafeAreaView className="flex-1">
@@ -63,7 +92,7 @@ const Profile = () => {
     return (
       <SafeAreaView className="flex-1 ">
         <View className="justify-center items-center w-full h-full bg-primary">
-        <Text className="text-textgray text-lg">{error}</Text>
+          <Text className="text-textgray text-lg">{error}</Text>
         </View>
       </SafeAreaView>
     );
@@ -87,6 +116,21 @@ const Profile = () => {
               />
             </View>
           </TouchableOpacity>
+          {mine && (
+            <TouchableOpacity
+              onPress={pickImage}
+              style={{ position: "absolute", bottom: 25, right: 25, zIndex: 10 }}
+            >
+
+                <Image
+                  source={icons.edit}
+                  className="w-7 h-7"
+                  tintColor="#FAA41A"
+                  resizeMode="contain"
+                />
+         
+            </TouchableOpacity>
+          )}
           <Image
             className="w-full h-full"
             resizeMode="cover"
