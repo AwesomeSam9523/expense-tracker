@@ -27,6 +27,10 @@ router.post('/new', async (req, res) => {
       return res.status(400).json({success: false, message: 'Event is closed'});
     }
 
+    const eventBudget = event.rows[0].budget;
+    if (amount > eventBudget) {
+      return res.status(400).json({success: false, message: 'Amount exceeds event budget'});
+    }
 
     const fileExtension = mimeType.split('/')[1];
     const id = uuidv4();
