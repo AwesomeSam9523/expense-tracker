@@ -54,7 +54,7 @@ router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    const data = await pool.query('SELECT "password", "token", "enabled" FROM "public"."users" WHERE "username" = $1', [username]);
+    const data = await pool.query('SELECT "password", "token", "enabled" FROM "public"."users" WHERE "username" = $1 AND "deleted" = false', [username]);
 
     if (data.rowCount === 0) {
       return res.status(404).json({success: false, message: 'User does not exist'});
@@ -222,8 +222,7 @@ router.get('/all', async (req, res) => {
     }
 
     const search = req.query.search || '';
-
-    const data = await pool.query('SELECT "id", "name", "pfp", "enabled", "role", "post", "username" FROM "public"."users" WHERE "username" ILIKE $1  ORDER BY "createdAt"', [`%${search}%`]);
+    const data = await pool.query('SELECT "id", "name", "pfp", "enabled", "role", "post", "username" FROM "public"."users" WHERE "username" ILIKE $1 AND "deleted" = false ORDER BY "createdAt"', [`%${search}%`]);
 
     const roles = ['EC', 'CC', 'JC'];
     data.rows.sort((a, b) => roles.indexOf(a.role) - roles.indexOf(b.role));
@@ -320,7 +319,7 @@ router.post('/delete', async (req, res) => {
       return res.status(403).json({success: false, message: 'Cannot delete an EC via app.'});
     }
 
-    await pool.query('DELETE FROM "public"."users" WHERE "id" = $1', [id]);
+    await pool.query('UPDATE "public"."users" SET "deleted" = true WHERE "id" = $1', [id]);
 
     res.status(201).json({success: true, message: 'User deleted'});
   } catch (e) {
@@ -336,7 +335,7 @@ router.get('/:id', async (req, res) => {
     }
 
     const { id } = req.params;
-    const data = await pool.query('SELECT "id", "name", "pfp", "enabled", "role", "post", "username" FROM "public"."users" WHERE "id" = $1', [id]);
+    const data = await pool.query('SELECT "id", "name", "pfp", "enabled", "role", "post", "username" FROM "public"."users" WHERE "id" = $1 AND "deleted" = false', [id]);
     if (data.rowCount === 0) {
       return res.status(404).json({success: false, message: 'User not found'});
     }

@@ -3,7 +3,7 @@ import pool from './database.js';
 const tokenMap = {};
 
 async function getUser(token) {
-  const data = await pool.query('SELECT "id", "name", "pfp", "role", "enabled", "firstLogin" FROM "public"."users" WHERE "token" = $1', [token]);
+  const data = await pool.query('SELECT "id", "name", "pfp", "role", "enabled", "firstLogin" FROM "public"."users" WHERE "token" = $1 AND "deleted" = false', [token]);
   if (data.rowCount === 0) {
     return null;
   }

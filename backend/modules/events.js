@@ -98,7 +98,7 @@ router.post('/delete', async (req, res) => {
       return res.status(400).json({success: false, message: 'ID is required'});
     }
 
-    await pool.query('DELETE FROM "public"."events" WHERE id = $1', [id]);
+    await pool.query('UPDATE "public"."events" SET "deleted" = true WHERE id = $1', [id]);
     res.status(201).json({
       success: true,
       message: 'Event deleted!',
@@ -143,8 +143,8 @@ router.get('/list', async (req, res) => {
     }
 
     let query = (req.user.role === 'EC')
-      ? 'SELECT id, name, budget, image, "createdAt", closed FROM "public"."events" WHERE name ILIKE $1'
-      : 'SELECT id, name, budget, image, "createdAt", closed FROM "public"."events" WHERE closed = false AND name ILIKE $1';
+      ? 'SELECT id, name, budget, image, "createdAt", closed FROM "public"."events" WHERE name ILIKE $1 AND "deleted" = false'
+      : 'SELECT id, name, budget, image, "createdAt", closed FROM "public"."events" WHERE closed = false AND name ILIKE $1 AND "deleted" = false';
 
     const search = req.query.search || '';
     const filter = req.query.filter || 'NewToOld';
@@ -189,7 +189,7 @@ router.get('/:id', async (req, res) => {
       return res.status(400).json({success: false, message: 'ID is required'});
     }
 
-    const data = await pool.query('SELECT id, name, description, date, budget, expenditure, image, "createdAt", closed FROM "public"."events" WHERE id = $1', [id]);
+    const data = await pool.query('SELECT id, name, description, date, budget, expenditure, image, "createdAt", closed FROM "public"."events" WHERE id = $1 AND "deleted" = false', [id]);
     if (data.rowCount === 0) {
       return res.status(404).json({success: false, message: 'Event not found'});
     }
