@@ -91,7 +91,7 @@ function Event() {
         ...eventResponse.data,
         budgetLeft: eventResponse.data.budget - eventResponse.data.expenditure,
       });
-      setToggle(!data.closed);
+      setToggle(!eventResponse.data.closed);
       setInvoices(invoiceResponse.data);
     } catch (err) {
       setError(err.message || "An error occurred while fetching data.");
