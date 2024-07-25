@@ -1,17 +1,10 @@
 import {Image, TouchableOpacity, View} from "react-native";
 import icons from "../constants/icons";
-import React, {useEffect, useState} from "react";
-import {getUserData} from "../utils/userdata";
+import React from "react";
 import {router} from "expo-router";
 import ProfilePicture from "./ProfilePicture";
 
-function TopHeader() {
-
-  const [userData, setUserData] = useState({});
-
-  useEffect(() => {
-    getUserData().then(setUserData);
-  }, []);
+function TopHeader({userData}) {
 
   return (
     <View className="flex flex-row items-center justify-between w-full">

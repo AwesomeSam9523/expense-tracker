@@ -36,6 +36,7 @@ function Index() {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
+    getUserData().then(setUserData);
     fetchEventsData();
   }, []);
 
@@ -55,7 +56,7 @@ function Index() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View className="w-full h-full flex justify-start items-center px-4 bg-primary pt-[5%]">
-        <TopHeader />
+        <TopHeader userData={userData} />
 
         <View className="flex flex-row w-full justify-between items-center py-8">
           <SearchBar

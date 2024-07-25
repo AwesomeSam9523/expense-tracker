@@ -13,19 +13,22 @@ export default function PendingInvoices() {
   const [refreshing, setRefreshing] = useState(false);
   const [userData, setUserData] = useState({});
 
-  const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
-  }, []);
-
-  useEffect(() => {
+  function fetchData() {
     service.get('/invoice/pending').then((response) => {
       setPendingInvoices(response.data);
       setRefreshing(false);
       console.log(response.data);
     });
-  }, [refreshing]);
+  }
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    fetchData();
+    getUserData().then(setUserData);
+  }, []);
 
   useEffect(() => {
+    fetchData();
     getUserData().then(setUserData);
   }, []);
 
@@ -33,7 +36,7 @@ export default function PendingInvoices() {
     <SafeAreaView style={{flex: 1}}>
       {userData.role === 'EC' ?
         <View className="w-full h-full flex justify-start items-center px-4 bg-primary pt-[5%]">
-          <TopHeader />
+          <TopHeader userData={userData} />
 
           <Text className="text-4xl text-white font-bold pt-[8%]">Pending Invoices</Text>
 

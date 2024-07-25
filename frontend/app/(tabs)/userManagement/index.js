@@ -19,14 +19,20 @@ export default function UserManagementScreen() {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
+    fetchData();
+    getUserData().then(setUserData);
   }, []);
 
-  useEffect(() => {
+  function fetchData() {
     service.get(`/user/all?search=${searchPhrase}`).then((response) => {
       setUsers(response.data);
       setRefreshing(false);
     });
-  }, [searchPhrase, refreshing]);
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, [searchPhrase]);
 
   useEffect(() => {
     getUserData().then(setUserData);
@@ -37,7 +43,7 @@ export default function UserManagementScreen() {
 
       {userData.role === 'EC' ?
         <View className="w-full h-full flex justify-start items-center px-4 bg-primary pt-[5%]">
-          <TopHeader />
+          <TopHeader userData={userData} />
 
           <View className="flex flex-row w-full justify-between items-center py-8">
             <SearchBar setSearchPhrase={setSearchPhrase} placeholder={"Search any user"} />

@@ -9,14 +9,14 @@ import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import * as ImagePicker from "expo-image-picker";
-import { getUserData, setToken } from "../utils/userdata";
+import { getUserData, setUserData, setToken } from "../utils/userdata";
 import { router, useLocalSearchParams } from "expo-router";
 import ProfileButton from "../components/ProfileButton";
 import icons from "../constants/icons";
 import { service } from "../utils/service";
 
 const Profile = () => {
-  const [userData, setUserData] = useState({});
+  const [userData, setUserDataLocal] = useState({});
   const [mine, setMine] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -28,7 +28,7 @@ const Profile = () => {
         setIsLoading(true);
         setError(null);
         const res = await service.get(`/user/${id}`);
-        setUserData(res.data);
+        setUserDataLocal(res.data);
 
         const data = await getUserData();
         if (data.id === id) {
@@ -71,7 +71,8 @@ const Profile = () => {
       });
 
       if (response.success) {
-        setUserData({ ...userData, pfp: response.data.imageUrl });
+        setUserDataLocal({ ...userData, pfp: response.data.imageUrl });
+        await setUserData({ ...userData, pfp: response.data.imageUrl });
       }
     } catch (err) {
       setError("An error occurred while updating the profile picture.");
